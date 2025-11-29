@@ -16,19 +16,19 @@ export function RegisterPage() {
                 <form onSubmit={handleSubmit}>
                     <div className="mb-3">
                         <label className="form-label">Meno</label>
-                        <input type="text" className="form-control" placeholder="Zadajte meno" />
+                        <input required type="text" className="form-control" placeholder="Zadajte meno" />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Email</label>
-                        <input type="email" className="form-control" placeholder="Zadajte email" />
+                        <input required type="email" className="form-control" placeholder="Zadajte email" />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Heslo</label>
-                        <input type="password" className="form-control" placeholder="Zadajte heslo" />
+                        <input required type="password" className="form-control" placeholder="Zadajte heslo" />
                     </div>
                     <div className="mb-3">
                         <label className="form-label">Potvrďte heslo</label>
-                        <input type="password" className="form-control" placeholder="Zopakujte heslo" />
+                        <input required type="password" className="form-control" placeholder="Zopakujte heslo" />
                     </div>
                     <div className='text-center'>
                         <button type="submit" className="btn  btn-success w-20">
