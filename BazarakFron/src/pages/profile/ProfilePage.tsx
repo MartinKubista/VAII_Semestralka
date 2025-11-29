@@ -1,7 +1,7 @@
 export function ProfilePage() {
   return (
     <div>
-      <h1>Add Item Page</h1>
+      <h1>profile page</h1>
     </div>
   )
 }

@@ -35,7 +35,12 @@ export function Header() {
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="headerAddItem nav-link rounded text-light bg-primary fw-bold" to="/item">
+                        <Link className="nav-link d-flex align-items-center" to="/register">
+                             👤 <span className="ms-1">Registruj sa</span>
+                        </Link>
+                    </li>
+                    <li className="nav-item">
+                        <Link className="headerAddItem nav-link rounded text-light bg-primary fw-bold" to="/add-item">
                             Pridať nový inzerát
                         </Link>
                     </li>

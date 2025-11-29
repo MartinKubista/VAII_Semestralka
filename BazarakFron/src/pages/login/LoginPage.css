@@ -1,0 +1,10 @@
+.maxWidthContainer {
+    max-width: 500px!important;
+    margin: 0 auto !important;
+}
+
+.lineUnderLogin{
+    padding: 0;
+    margin: 0;
+    padding-bottom: 10px;
+}
