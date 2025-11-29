@@ -15,27 +15,27 @@ export function Header() {
             <div className="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo01">
                 <ul className="navbar-nav allign-items-center gap-2"> 
                     <li className="nav-item">
-                        <Link className="nav-link d-flex align-items-center" to="/">
+                        <Link className="nav-link d-flex align-items-center shadow-sm" to="/">
                              🏠 <span className="ms-1">Domov</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link d-flex align-items-center" to="/profile">
+                        <Link className="nav-link d-flex align-items-center shadow-sm" to="/profile">
                              🧑 <span className="ms-1">Môj profil</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link d-flex align-items-center" to="/register">
+                        <Link className="nav-link d-flex align-items-center shadow-sm" to="/register">
                              🚪 <span className="ms-1">Odhlásiť sa</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link d-flex align-items-center" to="/login">
+                        <Link className="nav-link d-flex align-items-center shadow-sm" to="/login">
                              👤 <span className="ms-1">Prihlásiť sa</span>
                         </Link>
                     </li>
                     <li className="nav-item">
-                        <Link className="nav-link d-flex align-items-center" to="/register">
+                        <Link className="nav-link d-flex align-items-center shadow-sm" to="/register">
                              👤 <span className="ms-1">Registruj sa</span>
                         </Link>
                     </li>
