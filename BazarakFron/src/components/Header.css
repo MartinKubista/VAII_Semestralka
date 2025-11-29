@@ -1,0 +1,9 @@
+@media (max-width: 991px) {
+    .headerAddItem {
+        display: inline-block !important;
+        width: auto !important;
+        padding-right: 8px !important;
+        padding-left: 8px !important;
+    }
+
+}
