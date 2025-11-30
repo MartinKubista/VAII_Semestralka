@@ -22,11 +22,8 @@ export function LoginPage() {
         return;
         }
         const data = await res.json();
-
         localStorage.setItem("token", data.token);
-        
         login(data.token);
-
         navigate('/');
     };
 
