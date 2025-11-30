@@ -3,8 +3,7 @@ import { useAuth } from "../context/AuthContext";
 import './Header.css';
 
 export function Header() {
-    const { isLoggedIn, user, logout, loading } = useAuth();
-    if (loading) return null; 
+    const { isLoggedIn, user, logout} = useAuth();
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
       <Link className="navbar-brand fw-bold text-primary" to="/">

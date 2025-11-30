@@ -11,7 +11,6 @@ interface AuthContextType {
   user: MyTokenPayload | null;
   token: string | null;
   isLoggedIn: boolean;
-  loading: boolean;
   login: (token: string) => void;
   logout: () => void;
 }
@@ -20,7 +19,6 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   token: null,
   isLoggedIn: false,
-  loading: true,
   login: () => {},
   logout: () => {}
 });
@@ -29,7 +27,6 @@ export const AuthProvider = ({ children }: any) => {
   const [user, setUser] = useState<MyTokenPayload | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const savedToken = localStorage.getItem("token");
@@ -44,8 +41,6 @@ export const AuthProvider = ({ children }: any) => {
         logout();
       }
     }
-
-    setLoading(false);
   }, []);
 
   const login = (token: string) => {
@@ -71,7 +66,7 @@ export const AuthProvider = ({ children }: any) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, isLoggedIn, loading, login, logout }}>
+    <AuthContext.Provider value={{ user, token, isLoggedIn, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
