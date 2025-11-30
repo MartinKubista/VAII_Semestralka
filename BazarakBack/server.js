@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const cors = require("cors");
 const authRoutes = require("./routes/authRoutes");
+const itemRoutes = require("./routes/itemRoutes");
 const pool = require("./db");
 
 const app = express();
@@ -10,5 +11,7 @@ app.use(express.json());
 
 
 app.use("/api/auth", authRoutes);
+app.use("/api/items", itemRoutes);
+app.use("/uploads", express.static("uploads"));
 
 app.listen(5000, () => console.log("Server running on port 5000"));

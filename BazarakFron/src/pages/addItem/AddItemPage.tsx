@@ -11,7 +11,14 @@ interface ImagePreview {
 }
 
 export function AddItemPage() {
-  const { isLoggedIn } = useAuth();
+  const [name, setName] = useState("");
+  const [category, setCategory] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState(0);
+  const [condition, setCondition] = useState("");
+  const [location, setLocation] = useState("");
+
+  const { isLoggedIn, user } = useAuth();
   const navigate = useNavigate();
   const [images, setImages] = useState<ImagePreview[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -38,10 +45,23 @@ export function AddItemPage() {
     }
 
   };
-
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+    const id_user = user?.id_user;
+    const response = await fetch("http://localhost:5000/api/items/add-item", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id_user ,name, category, description, price, condition, location}),
+    });
 
+    const data = await response.json().catch(() => null);
+
+    console.log("Response status:", response.status);
+    console.log("Response body:", data);
+
+
+
+/*
     const formData = new FormData();
 
     images.forEach((img) => {
@@ -53,7 +73,7 @@ export function AddItemPage() {
     await fetch("http://localhost:5000/api/items", {
       method: "POST",
       body: formData,
-    });
+    });*/
   };
 
   useEffect(() => {
@@ -74,12 +94,12 @@ export function AddItemPage() {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Názov inzerátu:</label>
-            <input type="text" className="form-control" placeholder="Zadajte názov produktu" required />
+            <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Zadajte názov produktu" required />
           </div>
 
           <div className="mb-3">
             <label className="form-label">Kategória:</label>
-            <select className="form-select" required>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-select" required>
               <option value="">-- Vyberte kategóriu --</option>
               <option>Elektronika</option>
               <option>Nábytok</option>
@@ -90,17 +110,17 @@ export function AddItemPage() {
 
           <div className="mb-3">
             <label className="form-label">Popis:</label>
-            <textarea className="form-control" rows={4} placeholder="Popíšte svoj inzerát – stav, výhody, príslušenstvo..." required></textarea>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="form-control" rows={4} placeholder="Popíšte svoj inzerát – stav, výhody, príslušenstvo..." required></textarea>
           </div>
 
           <div className="mb-3">
             <label className="form-label">Cena (€):</label>
-            <input type="number" className="form-control" placeholder="Zadajte cenu" required />
+            <input value={price} onChange={(e) => setPrice(Number(e.target.value))} type="number" className="form-control" placeholder="Zadajte cenu" required />
           </div>
 
           <div className="mb-3">
             <label className="form-label">Stav tovaru:</label>
-            <select className="form-select" required>
+            <select value={condition} onChange={(e) => setCondition(e.target.value)} className="form-select" required>
               <option value="">-- Vyberte stav --</option>
               <option>Nové</option>
               <option>Rozbalené</option>
@@ -110,7 +130,7 @@ export function AddItemPage() {
 
           <div className="mb-3">
             <label className="form-label">Lokalita:</label>
-            <input type="text" className="form-control" placeholder="Zadajte mesto alebo okres" required />
+            <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" className="form-control" placeholder="Zadajte mesto alebo okres" required />
           </div>
 
           <div className="mb-3">
