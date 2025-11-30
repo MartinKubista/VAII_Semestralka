@@ -56,7 +56,7 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id: user.id, email: user.email, name: user.name },
+            { id: user.id_user, email: user.email, name: user.name },
             JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -73,21 +73,16 @@ exports.getMe = async (req, res) => {
     try {
         const userId = req.user.id;
 
-        const userResult = await pool.query(
-            "SELECT id, email FROM users WHERE id = $1",
+        const [rows] = await pool.query(
+            "SELECT id_user AS id, email, name FROM users WHERE id_user = ?",
             [userId]
         );
 
-        if (userResult.rows.length === 0) {
+        if (rows.length === 0) {
             return res.status(404).json({ message: "Používateľ neexistuje." });
         }
 
-        const user = userResult.rows[0];
-
-        res.json({
-            message: "Úspech",
-            user: user,
-        });
+        res.json({ message: "Úspech", user: rows[0] });
 
     } catch (error) {
         console.error("getMe error:", error);

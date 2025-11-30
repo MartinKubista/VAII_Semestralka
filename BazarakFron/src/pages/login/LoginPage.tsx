@@ -1,19 +1,14 @@
 import './LoginPage.css';
-import { jwtDecode } from "jwt-decode";
-import type { JwtPayload } from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAuth } from "../../context/AuthContext";
 
-interface MyTokenPayload extends JwtPayload {
-  id: number;
-  email: string;
-  name: string;
-}
 
 export function LoginPage() {
-      const [email, setEmail] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const navigate = useNavigate();
+     const { login } = useAuth();
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
@@ -30,13 +25,8 @@ export function LoginPage() {
 
         localStorage.setItem("token", data.token);
         
-        const token = localStorage.getItem("token");
+        login(data.token);
 
-        if (token) {
-            const decoded = jwtDecode<MyTokenPayload>(token);
-            console.log(decoded.email);
-            console.log(decoded.name);
-        }
         navigate('/');
     };
 
