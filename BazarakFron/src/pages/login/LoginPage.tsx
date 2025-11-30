@@ -1,6 +1,14 @@
 import './LoginPage.css';
+import { jwtDecode } from "jwt-decode";
+import type { JwtPayload } from "jwt-decode";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+
+interface MyTokenPayload extends JwtPayload {
+  id: number;
+  email: string;
+  name: string;
+}
 
 export function LoginPage() {
       const [email, setEmail] = useState("");
@@ -14,7 +22,6 @@ export function LoginPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
         });
-
         if (!res.ok) {
         alert("Nesprávny email alebo heslo");
         return;
@@ -23,6 +30,13 @@ export function LoginPage() {
 
         localStorage.setItem("token", data.token);
         
+        const token = localStorage.getItem("token");
+
+        if (token) {
+            const decoded = jwtDecode<MyTokenPayload>(token);
+            console.log(decoded.email);
+            console.log(decoded.name);
+        }
         navigate('/');
     };
 

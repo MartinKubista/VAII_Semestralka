@@ -38,7 +38,6 @@ exports.loginUser = async (req, res) => {
     const {email, password} = req.body;
 
     try{
-        
         const [rows] = await pool.query(
             "SELECT * FROM users WHERE email = ?",
             [email]
@@ -50,26 +49,19 @@ exports.loginUser = async (req, res) => {
 
         const user = rows[0];
 
-
-        const isValid = await bcrypt.compare(password, user.passwordHash);
+        
+        const isValid = await bcrypt.compare(password, user.password);
             if (!isValid) {
             return res.status(400).json({ message: "Invalid email or password" });
         }
 
         const token = jwt.sign(
-            { id: user.id, email: user.email },
+            { id: user.id, email: user.email, name: user.name },
             JWT_SECRET,
             { expiresIn: "1d" }
         );
 
-        return res.json({
-            message: "Prihlásenie úspešné.",
-            token,
-            user: {
-                name: user.name,
-                email: user.email
-            }
-        });
+        return res.json({ token });
 
     } catch(errors){
         console.error(errors);
