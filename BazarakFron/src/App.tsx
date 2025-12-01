@@ -5,6 +5,7 @@ import { LoginPage } from "./pages/login/LoginPage.tsx"
 import { RegisterPage } from "./pages/register/RegisterPage.tsx"
 import { AddItemPage } from "./pages/addItem/AddItemPage.tsx"
 import { ProfilePage } from "./pages/profile/ProfilePage.tsx"
+import {ItemDetailPage} from "./pages/itemDetail/ItemDetailPage.tsx"
 import { Routes, Route } from "react-router-dom"
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <Route path="/register" element={<RegisterPage />}></Route>
           <Route path="/add-item" element={<AddItemPage />}></Route>
           <Route path="/profile" element={<ProfilePage />}></Route>
+          <Route path="/item/:id" element={<ItemDetailPage />} />
       </Routes>
     </>
   )

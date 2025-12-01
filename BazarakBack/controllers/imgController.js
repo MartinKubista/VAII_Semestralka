@@ -4,8 +4,6 @@ exports.addImgs = async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT MAX(id_item) AS maxId FROM items');
 
-    console.log("Received rows:", rows);
-
     const maxId = rows[0]?.maxId;
 
     if (maxId === undefined || maxId === null || isNaN(maxId)) {

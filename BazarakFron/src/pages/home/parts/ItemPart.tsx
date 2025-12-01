@@ -15,15 +15,16 @@ export function ItemPart() {
     const [items, setItems] = useState<Item[]>([]);
 
 useEffect(() => {
-    async function loadItems() {
+     async function loadItems() {
         try {
             const response = await fetch("http://localhost:5000/api/items/showItems");
 
-            const data = await response.json().catch(() => null);
+            const data = await response.json();
 
-            setItems(data);
+           setItems(Array.isArray(data) ? data : []);
         } catch (error) {
             console.error("Fetch error:", error);
+            setItems([]);
         }
     }
 
@@ -48,7 +49,11 @@ useEffect(() => {
                                 Pridané: {new Date(item.created_at).toLocaleDateString("sk-SK")}
                             </p>
 
-                            <p>{item.description}</p>
+                            <p>
+                            {item.description.length > 100
+                                ? item.description.slice(0, 98) + "..."
+                                : item.description}
+                            </p>
                     </div>
 
             </div>
