@@ -61,14 +61,16 @@ export function AddItemPage() {
       formData.append("images", img.file);
     });
 
-  const response2 = await fetch("http://localhost:5000/api/items/add-imgs", {
+  /*const response2 = */await fetch("http://localhost:5000/api/items/add-imgs", {
       method: "POST",
       body: formData
   });
-    const data = await response2.json().catch(() => null);
+   /* const data = await response2.json().catch(() => null);
 
     console.log("Response status:", response2.status);
     console.log("Response body:", data);
+    */
+    navigate("/");
   };
 
   useEffect(() => {
