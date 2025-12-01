@@ -1,16 +1,30 @@
 export function SearchPart() {
     return (
-        <div className="card mb-4 shadow">
+    <div className="card mb-4 shadow">
         <div className="card-body">
-            <h5 className="mb-3">Filtrovanie</h5>
 
             <form className="row g-3">
+
+                {/* 🔎 Search + button */}
+                <div className="col-12">
+                    <label className="form-label">Hľadať</label>
+                    <div className="input-group">
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Hľadať podľa názvu alebo popisu"
+                        />
+                        <button className="btn btn-outline-primary" type="button">
+                            Hľadať
+                        </button>
+                    </div>
+                </div>
 
                 <div className="col-md-4">
                     <label className="form-label">Cena</label>
                     <div className="d-flex gap-2">
-                        <input type="number" className="form-control" placeholder="Min €"/>
-                        <input type="number" className="form-control" placeholder="Max €"/>
+                        <input type="number" className="form-control" placeholder="Min €" />
+                        <input type="number" className="form-control" placeholder="Max €" />
                     </div>
                 </div>
 
@@ -36,9 +50,10 @@ export function SearchPart() {
                 </div>
 
                 <div className="col-12">
-                    <button className="btn btn-primary">Filtrovať</button>
+                    <button className="btn btn-primary w-20">Filtrovať</button>
                 </div>
             </form>
+
         </div>
     </div>
     );
