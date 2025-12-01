@@ -1,4 +1,6 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import './ItemPart.css';
 
 type Item = {
   id_item: number;
@@ -17,11 +19,7 @@ useEffect(() => {
         try {
             const response = await fetch("http://localhost:5000/api/items/showItems");
 
-            // bezpečné prečítanie tela
             const data = await response.json().catch(() => null);
-
-            console.log("Response status:", response.status);
-            console.log("Response body:", data);
 
             setItems(data);
         } catch (error) {
@@ -35,7 +33,8 @@ useEffect(() => {
     return (
          <div className="row g-4">
         {items.map((item) => (
-        <div key={item.id_item} className="col-md-6 col-lg-4 ">
+        <div  key={item.id_item} className="col-md-6 col-lg-4 ">
+            <Link className="linkwithoutstyle" to={`/item/${item.id_item}`}>
             <div className="card h-100 shadow">
                 <img src={`http://localhost:5000${item.image}`} className="card-img-top" alt=""/>
                     <div  className="card-body">
@@ -53,6 +52,7 @@ useEffect(() => {
                     </div>
 
             </div>
+            </Link>
         </div>
         ))}
     </div>
