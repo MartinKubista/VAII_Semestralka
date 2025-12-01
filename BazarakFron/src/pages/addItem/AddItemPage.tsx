@@ -48,32 +48,27 @@ export function AddItemPage() {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     const id_user = user?.id_user;
-    const response = await fetch("http://localhost:5000/api/items/add-item", {
+    await fetch("http://localhost:5000/api/items/add-item", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id_user ,name, category, description, price, condition, location}),
     });
 
-    const data = await response.json().catch(() => null);
-
-    console.log("Response status:", response.status);
-    console.log("Response body:", data);
-
-
-
-/*
+    
     const formData = new FormData();
 
     images.forEach((img) => {
       formData.append("images", img.file);
     });
 
-    console.log("Posielajú sa obrázky:", images);
-
-    await fetch("http://localhost:5000/api/items", {
+  const response2 = await fetch("http://localhost:5000/api/items/add-imgs", {
       method: "POST",
-      body: formData,
-    });*/
+      body: formData
+  });
+    const data = await response2.json().catch(() => null);
+
+    console.log("Response status:", response2.status);
+    console.log("Response body:", data);
   };
 
   useEffect(() => {

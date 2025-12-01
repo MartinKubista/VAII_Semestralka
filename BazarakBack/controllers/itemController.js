@@ -62,8 +62,10 @@ exports.addItem = async (req, res) => {
         location
         ]);
 
-        res.status(201).json({ message: "Item successfully created." });
-
+        
+        return res.status(201).json({
+          message: "Item successfully created."
+        });
 
     } catch(errors){
         console.error(errors);
