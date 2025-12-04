@@ -3,10 +3,11 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../../../context/AuthContext";
 
 type Comment = {
-  id_commnet: number;
+  id_comment: number;
   user_name: string;
   created_at: string;
   text: string;
+  id_user: number;
 };
 
 export function ItemDetailCommentsPart() {
@@ -16,17 +17,56 @@ export function ItemDetailCommentsPart() {
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
 
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
 
   async function loadComments() {
     try {
       const response = await fetch(
         `http://localhost:5000/api/item-detail/${id}/comments`
       );
+
       const data = await response.json();
+
       setComments(Array.isArray(data) ? data : []);
     } catch (error) {
       console.error("Error loading comments:", error);
       setComments([]);
+    }
+  }
+
+  async function deleteComment(id_commentPar: number) {
+    try {
+      await fetch(
+        `http://localhost:5000/api/item-detail/delete-comment/${id_commentPar}`,
+        {
+          method: "DELETE",
+        }
+      );
+      await loadComments();
+    } catch (error) {
+      console.error("Error deleting comment:", error);
+    }
+  }
+
+  async function updateComment() {
+    if (editingId === null) return;
+
+    try {
+      await fetch(
+        `http://localhost:5000/api/item-detail/update-comment/${editingId}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ text: editingText }),
+        }
+      );
+
+      setEditingId(null);
+      setEditingText("");
+      loadComments();
+    } catch (error) {
+      console.error("Error updating comment:", error);
     }
   }
 
@@ -36,18 +76,18 @@ export function ItemDetailCommentsPart() {
 
   async function addComment() {
     try {
-      await fetch(`http://localhost:5000/api/item-detail/${id}/add-comment`, {
+      await fetch(`http://localhost:5000/api/item-detail/add-comment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: newComment,
-          user_name: user?.name,
+          id_user: user?.id_user,
           id_item: id,
         }),
       });
 
-      setNewComment(""); 
-      loadComments(); 
+      setNewComment("");
+      loadComments();
     } catch (error) {
       console.error("Error adding comment:", error);
     }
@@ -60,28 +100,84 @@ export function ItemDetailCommentsPart() {
 
         {comments.length > 0 ? (
           comments.map((c) => (
-            <div key={c.id_commnet} className="mb-3 pb-3 border-bottom">
+            <div key={c.id_comment} className="mb-3 pb-3 border-bottom">
+
+              {/* Hlavicka - meno + datum */}
               <div className="d-flex justify-content-between">
                 <div className="fw-bold">{c.user_name}</div>
 
                 <div className="text-muted" style={{ fontSize: "0.9rem" }}>
-                    {new Date(c.created_at).toLocaleString("sk-SK", {
+                  {new Date(c.created_at).toLocaleString("sk-SK", {
                     day: "2-digit",
                     month: "2-digit",
                     year: "numeric",
                     hour: "2-digit",
-                    minute: "2-digit"
-                    })}
+                    minute: "2-digit",
+                  })}
                 </div>
               </div>
 
-              <div className="mt-1">{c.text}</div>
+              {/* Text alebo editovaci rezim */}
+              <div className="mt-2" style={{ width: "100%" }}>
+                {editingId === c.id_comment ? (
+                  <>
+                    <textarea
+                      className="form-control"
+                      value={editingText}
+                      onChange={(e) => setEditingText(e.target.value)}
+                    />
+
+                    <button
+                      className="btn btn-success btn-sm mt-2 me-2"
+                      onClick={updateComment}
+                    >
+                      💾 Uložiť
+                    </button>
+
+                    <button
+                      className="btn btn-secondary btn-sm mt-2"
+                      onClick={() => {
+                        setEditingId(null);
+                        setEditingText("");
+                      }}
+                    >
+                      Zrušiť
+                    </button>
+                  </>
+                ) : (
+                  <div>{c.text}</div>
+                )}
+              </div>
+
+              {isLoggedIn &&
+                user?.id_user === c.id_user &&
+                editingId !== c.id_comment && (
+                  <div className="mt-2 d-flex justify-content-end">
+                    <button
+                      className="btn btn-sm btn-warning me-2"
+                      onClick={() => {
+                        setEditingId(c.id_comment);
+                        setEditingText(c.text);
+                      }}
+                    >
+                      ✏️ Upraviť
+                    </button>
+
+                    <button
+                      className="btn btn-sm btn-danger"
+                      onClick={() => deleteComment(c.id_comment)}
+                    >
+                      ❌ Zmazať
+                    </button>
+                  </div>
+               )}
             </div>
           ))
         ) : (
           <p className="text-muted">Zatiaľ žiadne komentáre.</p>
         )}
 
+        {/* Pridanie noveho komentara */}
         {isLoggedIn && (
           <>
             <textarea
