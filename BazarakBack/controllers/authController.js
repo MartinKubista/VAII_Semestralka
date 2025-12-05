@@ -12,6 +12,24 @@ exports.registerUser = async (req, res) => {
             return res.status(400).json({ message: "Missing fields" });
         }
 
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "Invalid email format" });
+        }
+
+        if (!/[A-Z]/.test(password)) {
+            return res.status(400).json({ message: "Password must contain at least one uppercase letter" });
+        }
+
+        if (!/\d/.test(password)) {
+            return res.status(400).json({ message: "Password must contain at least one number" });
+        }
+
+
+        if (password.length < 8) {
+            return res.status(400).json({ message: "Password must be at least 8 characters" });
+        }
+
         const [existingUser] = await pool.query('SELECT id_user FROM users WHERE email = ?', [email]);
 
         if (existingUser.length > 0) {
@@ -38,6 +56,15 @@ exports.loginUser = async (req, res) => {
     const {email, password} = req.body;
 
     try{
+        if (!email || !password) {
+            return res.status(400).json({ message: "Email and passwor are required" });
+        }
+
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            return res.status(400).json({ message: "The email is not in the correct format." });
+        }
+
         const [rows] = await pool.query(
             "SELECT * FROM users WHERE email = ?",
             [email]

@@ -8,3 +8,9 @@
     margin: 0;
     padding-bottom: 10px;
 }
+
+.error-text {
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}
