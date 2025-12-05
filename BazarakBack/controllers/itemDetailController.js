@@ -31,25 +31,42 @@ exports.itemDetail = async (req, res) => {
 exports.addComment = async (req, res) => {
     const { text, id_user, id_item } = req.body;
 
+    const newText = typeof text === "string" ? text.trim() : "";
+    const userId = Number(id_user);
+    const itemId = Number(id_item);
+
     try {
-        if (!text || typeof text !== "string" || text.trim().length === 0) {
-            return res.status(400).json({ message: "Comment cannot be empty." });
+        if (!newText || !userId || !itemId) {
+            return res.status(400).json({ message: "Text, id_use and id_item is required" });
         }
 
-      /*  if (!user_name || typeof user_name !== "string" || user_name.trim().length < 2) {
-            return res.status(400).json({ message: "Invalid username." });
-        }*/
-
-        if (!id_item || isNaN(Number(id_item))) {
-            return res.status(400).json({ message: "Invalid item ID." });
+        if (isNaN(userId)) {
+            return res.status(400).json({ message: "Invalid id_user." });
         }
 
-        const cleanText = text.trim().slice(0, 500);       
-        //const cleanId = id_user.trim().slice(0, 50);   
+        if (isNaN(itemId)) {
+            return res.status(400).json({ message: "Invalid id_item." });
+        }
+
+        if(newText.length > 500){
+            return res.status(400).json({message: "Text is too long"});
+        }
+
+        const [userRows] = await pool.query("SELECT id_user FROM users WHERE id_user = ?", [userId]);
+
+        if (userRows.length === 0) {
+            return res.status(400).json({ message: "User does not existst." });
+        }
+
+        const [itemRows] = await pool.query("SELECT id_item FROM items WHERE id_item = ?", [id_iitemIdtem]);
+
+        if (itemRows.length === 0) {
+            return res.status(400).json({ message: "Item does not existst." });
+        }
 
         await pool.query(
             "INSERT INTO comments (id_item, id_user, text) VALUES (?, ?, ?)",
-            [id_item, id_user, cleanText]
+            [itemId, userId, newText]
         );
 
         res.status(201).json({ message: "Comment has been added." });

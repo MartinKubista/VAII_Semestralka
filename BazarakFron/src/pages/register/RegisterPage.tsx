@@ -11,51 +11,62 @@ export function RegisterPage() {
 
     const navigate = useNavigate();
 
-    function validateForm(){
-        const newErrors: {name?: string; email?: string; password?: string; password2?: string;} = {};
+function validateForm() {
+    const newErrors: {
+        name?: string;
+        email?: string;
+        password?: string;
+        password2?: string;
+    } = {};
 
-        if (!name) {
-            newErrors.name = "Meno je povinné";
-        }
+    const trimmedName = name.trim();
+    const trimmedEmail = email.trim();
+    const trimmedPassword = password.trim();
+    const trimmedPassword2 = password2.trim();
 
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!email.trim()) {
-            newErrors.email = "Email je povinný";
-        } else if (!emailRegex.test(email)) {
-            newErrors.email = "Email nemá správny formát";
-        }
-
-        if (!password) {
-            newErrors.password = "Heslo je povinné";
-        } else if (password.length < 8) {
-            newErrors.password = "Heslo musí mať aspoň 8 znakov";
-        } else if (!/[A-Z]/.test(password)) {
-            newErrors.password = "Heslo musí obsahovať aspoň jedno veľké písmeno";
-        }
-        else if (!/\d/.test(password)) {
-            newErrors.password = "Heslo musí obsahovať aspoň jedno číslo";
-        }
-
-        if (!password2) {
-            newErrors.password2 = "Potvrdenie hesla je povinné";
-        } else if (password !== password2) {
-            newErrors.password2 = "Heslá sa nezhodujú";
-        }
-
-        setErrors(newErrors);
-
-        return Object.keys(newErrors).length === 0;
+    if (!trimmedName) {
+        newErrors.name = "Meno je povinné";
+    } else if (trimmedName.length > 50) {
+        newErrors.name = "Meno môže obsahovať maximálne 50 znakov";
     }
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!trimmedEmail) {
+        newErrors.email = "Email je povinný";
+    } else if (!emailRegex.test(trimmedEmail)) {
+        newErrors.email = "Email nemá správny formát";
+    } else if (trimmedEmail.length > 50) {
+        newErrors.email = "Email môže obsahovať maximálne 50 znakov";
+    }
+
+    if (!trimmedPassword) {
+        newErrors.password = "Heslo je povinné";
+    } else if (trimmedPassword.length < 8) {
+        newErrors.password = "Heslo musí mať aspoň 8 znakov";
+    } else if (!/[A-Z]/.test(trimmedPassword)) {
+        newErrors.password = "Heslo musí obsahovať aspoň jedno veľké písmeno";
+    } else if (!/\d/.test(trimmedPassword)) {
+        newErrors.password = "Heslo musí obsahovať aspoň jedno číslo";
+    } else if (trimmedPassword.length > 72) {
+        newErrors.password = "Heslo môže obsahovať maximálne 72 znakov";
+    }
+
+    if (!trimmedPassword2) {
+        newErrors.password2 = "Potvrdenie hesla je povinné";
+    } else if (trimmedPassword !== trimmedPassword2) {
+        newErrors.password2 = "Heslá sa nezhodujú";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+}
 
     async function handleSubmit(event: React.FormEvent) {
         event.preventDefault();
 
         if (!validateForm()) return;
-
-        if (password !== password2) {
-            alert("Heslá sa nezhodujú!");
-            return;
-        }
 
         await fetch("http://localhost:5000/api/auth/register", {
         method: "POST",

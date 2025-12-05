@@ -5,16 +5,14 @@ export function SearchPart() {
 
             <form className="row g-3">
 
-                {/* 🔎 Search + button */}
                 <div className="col-12">
-                    <label className="form-label">Hľadať</label>
-                    <div className="input-group">
+                    <div className="input-group d-flex flex-row mb-3">
                         <input
-                            type="text"
+                            type="text p-2"
                             className="form-control"
                             placeholder="Hľadať podľa názvu alebo popisu"
                         />
-                        <button className="btn btn-outline-primary" type="button">
+                        <button className="btn btn-outline-primary p-2" type="button">
                             Hľadať
                         </button>
                     </div>

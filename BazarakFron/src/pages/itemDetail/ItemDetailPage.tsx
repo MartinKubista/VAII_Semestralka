@@ -1,4 +1,4 @@
-import { ItemDetailPart } from "./parts/itemDetailPart.tsx";
+import { ItemDetailPart } from "./parts/ItemDetailPart.tsx";
 import {ItemDetailCommentsPart} from "./parts/ItemDetailCommentsPart.tsx";
 
 

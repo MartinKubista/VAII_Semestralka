@@ -23,6 +23,16 @@ export function AddItemPage() {
   const [images, setImages] = useState<ImagePreview[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
+  const [errors, setErrors] = useState<{
+  name?: string;
+  category?: string;
+  description?: string;
+  price?: string;
+  condition?: string;
+  location?: string;
+  images?: string;
+  }>({});
+
   const handleImagesChange = (e: ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files) return;
@@ -47,6 +57,9 @@ export function AddItemPage() {
   };
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) return;
+
     const id_user = user?.id_user;
     await fetch("http://localhost:5000/api/items/add-item", {
         method: "POST",
@@ -61,17 +74,71 @@ export function AddItemPage() {
       formData.append("images", img.file);
     });
 
-  /*const response2 = */await fetch("http://localhost:5000/api/items/add-imgs", {
+    await fetch("http://localhost:5000/api/items/add-imgs", {
       method: "POST",
       body: formData
-  });
-   /* const data = await response2.json().catch(() => null);
+    });
 
-    console.log("Response status:", response2.status);
-    console.log("Response body:", data);
-    */
     navigate("/");
   };
+
+  function validateForm() {
+    const newErrors: {
+      name?: string;
+      category?: string;
+      description?: string;
+      price?: string;
+      condition?: string;
+      location?: string;
+      images?: string;
+    } = {};
+
+    const trimmedName = name.trim();
+    const trimmedCategory = category.trim();
+    const trimmedDescription = description.trim();
+    const trimmedCondition = condition.trim();
+    const trimmedLocation = location.trim();
+    const numericPrice = Number(price);
+
+    if (!trimmedName) {
+      newErrors.name = "Názov je povinný";
+    } else if (trimmedName.length > 100) {
+      newErrors.name = "Názov môže mať max 100 znakov";
+    } else if (trimmedName.length < 3) {
+      newErrors.name = "Názov musí mať aspoň 3 znaky";
+    }
+
+    if (!trimmedCategory) {
+      newErrors.category = "Kategória je povinná";
+    }
+
+    if (!trimmedDescription) {
+      newErrors.description = "Popis je povinný";
+    } else if (trimmedDescription.length > 1000) {
+      newErrors.description = "Popis môže mať max 1000 znakov";
+    }
+
+    if (!numericPrice || numericPrice <= 0) {
+      newErrors.price = "Cena musí byť väčšia ako 0";
+    }
+
+    if (!trimmedCondition) {
+      newErrors.condition = "Stav je povinný";
+    }
+
+    if (!trimmedLocation) {
+      newErrors.location = "Lokalita je povinná";
+    } else if (trimmedLocation.length > 100) {
+      newErrors.location = "Lokalita môže mať max 100 znakov";
+    }
+
+    if (images.length > 10) {
+      newErrors.images = "Maximálny počet obrázkov je 10";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  }
 
   useEffect(() => {
     if (!isLoggedIn) {
@@ -91,43 +158,48 @@ export function AddItemPage() {
         <form onSubmit={handleSubmit}>
           <div className="mb-3">
             <label className="form-label">Názov inzerátu:</label>
-            <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Zadajte názov produktu" required />
+            <input value={name} onChange={e => setName(e.target.value)} type="text" className="form-control" placeholder="Zadajte názov produktu"  />
+            {errors.name && <div className="error-text">{errors.name}</div>}
           </div>
 
           <div className="mb-3">
             <label className="form-label">Kategória:</label>
-            <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-select" required>
+            <select value={category} onChange={(e) => setCategory(e.target.value)} className="form-select" >
               <option value="">-- Vyberte kategóriu --</option>
               <option>Elektronika</option>
               <option>Nábytok</option>
               <option>Oblečenie</option>
               <option>Šport</option>
             </select>
+            {errors.category && <div className="error-text">{errors.category}</div>}
           </div>
 
           <div className="mb-3">
             <label className="form-label">Popis:</label>
-            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="form-control" rows={4} placeholder="Popíšte svoj inzerát – stav, výhody, príslušenstvo..." required></textarea>
+            <textarea value={description} onChange={(e) => setDescription(e.target.value)} className="form-control" rows={4} placeholder="Popíšte svoj inzerát – stav, výhody, príslušenstvo..." ></textarea>
+            {errors.description && <div className="error-text">{errors.description}</div>}
           </div>
 
           <div className="mb-3">
             <label className="form-label">Cena (€):</label>
-            <input value={price} onChange={(e) => setPrice(Number(e.target.value))} type="number" className="form-control" placeholder="Zadajte cenu" required />
+            <input value={price} onChange={(e) => setPrice(Number(e.target.value))} type="number" className="form-control" placeholder="Zadajte cenu"  />
+            {errors.price && <div className="error-text">{errors.price}</div>}
           </div>
 
           <div className="mb-3">
             <label className="form-label">Stav tovaru:</label>
-            <select value={condition} onChange={(e) => setCondition(e.target.value)} className="form-select" required>
+            <select value={condition} onChange={(e) => setCondition(e.target.value)} className="form-select" >
               <option value="">-- Vyberte stav --</option>
               <option>Nové</option>
               <option>Rozbalené</option>
               <option>Použité</option>
             </select>
+            {errors.condition && <div className="error-text">{errors.condition}</div>}
           </div>
 
           <div className="mb-3">
             <label className="form-label">Lokalita:</label>
-            <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" className="form-control" placeholder="Zadajte mesto alebo okres" required />
+            <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" className="form-control" placeholder="Zadajte mesto alebo okres" />
           </div>
 
           <div className="mb-3">
@@ -148,6 +220,9 @@ export function AddItemPage() {
           </button>
 
           <p className="mt-2">Vybraných obrázkov: {images.length}</p>
+          {errors.images && (
+            <p className="text-danger mt-1">{errors.images}</p>
+          )}
           </div>
 
           {images.length > 0 && (

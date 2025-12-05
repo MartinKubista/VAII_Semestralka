@@ -2,3 +2,9 @@
     max-width: 500px!important;
     margin: 0 auto !important;
 }
+
+.error-text {
+  color: #d9534f;
+  font-size: 0.9rem;
+  margin-top: 4px;
+}

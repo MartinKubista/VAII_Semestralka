@@ -20,6 +20,8 @@ export function ItemDetailCommentsPart() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
+  const [errors, setErrors] = useState<{ newComment?: string }>({});
+
   async function loadComments() {
     try {
       const response = await fetch(
@@ -74,8 +76,25 @@ export function ItemDetailCommentsPart() {
     loadComments();
   }, [id]);
 
+  function validateForm() {
+    const newErrors: { newComment?: string } = {};
+
+    const text = newComment.trim();  
+
+    if (!text) {
+      newErrors.newComment = "Napíš komentár";
+    } else if (text.length > 500) {
+      newErrors.newComment = "Komentár môže mať max 500 znakov.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
+
   async function addComment() {
     try {
+      if (!validateForm()) return;
       await fetch(`http://localhost:5000/api/item-detail/add-comment`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -102,7 +121,6 @@ export function ItemDetailCommentsPart() {
           comments.map((c) => (
             <div key={c.id_comment} className="mb-3 pb-3 border-bottom">
 
-              {/* Hlavicka - meno + datum */}
               <div className="d-flex justify-content-between">
                 <div className="fw-bold">{c.user_name}</div>
 
@@ -117,7 +135,6 @@ export function ItemDetailCommentsPart() {
                 </div>
               </div>
 
-              {/* Text alebo editovaci rezim */}
               <div className="mt-2" style={{ width: "100%" }}>
                 {editingId === c.id_comment ? (
                   <>
@@ -177,7 +194,6 @@ export function ItemDetailCommentsPart() {
           <p className="text-muted">Zatiaľ žiadne komentáre.</p>
         )}
 
-        {/* Pridanie noveho komentara */}
         {isLoggedIn && (
           <>
             <textarea
@@ -187,7 +203,7 @@ export function ItemDetailCommentsPart() {
               value={newComment}
               onChange={(e) => setNewComment(e.target.value)}
             />
-
+            {errors.newComment && <p className="error-text">{errors.newComment}</p>}
             <div className="text-left">
               <button className="btn btn-primary" onClick={addComment}>
                 Pridať komentár

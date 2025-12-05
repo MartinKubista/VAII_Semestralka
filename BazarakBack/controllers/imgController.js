@@ -16,6 +16,10 @@ exports.addImgs = async (req, res) => {
       return res.status(400).json({ error: "No images uploaded" });
     }
 
+    if (files.length > 10) {
+      return res.status(400).json({ error: "Maximum number of images is 10." });
+    }
+
     const imagePaths = files.map(file => "/uploads/" + file.filename);
 
     for (const img of imagePaths) {
