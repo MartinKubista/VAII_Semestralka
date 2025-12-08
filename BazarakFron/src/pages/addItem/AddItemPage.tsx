@@ -1,5 +1,5 @@
 import './AddItemPage.css';
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../../context/useAuth";
 import { useState} from "react";
 import type{ ChangeEvent, FormEvent } from "react";
 import { useEffect, useRef } from "react";
