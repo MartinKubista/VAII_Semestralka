@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { useAuth } from "../../context/useAuth";
 import "./ProfilePage.css";
 
 type Review = {
@@ -32,6 +33,14 @@ export function ProfilePage() {
   const [user, setUser] = useState<User | null>(null);
   const [items, setItems] = useState<Item[]>([]);
 
+  const { token} = useAuth();
+
+  const loadItems = async () => {
+    const res = await fetch(`http://localhost:5000/api/profile/${id}/items`);
+    const data = await res.json();
+    setItems(Array.isArray(data) ? data : []);
+  };
+
   useEffect(() => {
     async function loadProfile() {
       try{
@@ -40,9 +49,7 @@ export function ProfilePage() {
         setUser(dataUSer);
 
 
-        const res2 = await fetch(`http://localhost:5000/api/profile/${id}/items`);
-        const dataItems = await res2.json();
-        setItems(Array.isArray(dataItems) ? dataItems : []);
+        await loadItems();
 
       } catch (err) {
       console.error(err);
@@ -52,6 +59,29 @@ export function ProfilePage() {
     }
     loadProfile();
   }, [id]);
+
+  const handleDelete = async (id: number) => {
+    try {
+    const response = await fetch(`http://localhost:5000/api/profile/${id}/deleteItem`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      throw new Error("Chyba pri mazaní produktu");
+    }
+
+    await loadItems();
+
+  } catch (error) {
+    console.error(error);
+  }
+
+      
+  };
 
   if (!user) return <p>Načítavam...</p>;
 
@@ -147,7 +177,7 @@ export function ProfilePage() {
                     </div>
                     <div className="card-footer d-flex justify-content-between">
                       <button className="btn btn-sm btn-warning">Upraviť</button>
-                      <button className="btn btn-sm btn-danger">Zmazať</button>
+                      <button className="btn btn-sm btn-danger" onClick={() => handleDelete(item.id_item)} >Zmazať</button>
                     </div>
                   </div>
                 </div>

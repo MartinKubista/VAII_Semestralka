@@ -1,6 +1,8 @@
 const pool = require('../db');
 const bcrypt = require('bcrypt');
 
+const {cleanupUnusedCarImages} = require('../cleanUnusedImages.js');
+
 exports.showProfile = async (req, res) => {
     try{
         const id = Number(req.params.id);
@@ -183,4 +185,53 @@ exports.showProfileItems = async (req, res) => {
     console.error(error);
     res.status(500).json({ message: "Server error" });
   }
+};
+
+exports.deleteProfileItem = async (req, res) => {
+  const userId = req.user.id_user;
+  const itemId = Number(req.params.id);
+
+  try {
+
+    if (!itemId || isNaN(itemId)) {
+      return res.status(400).json({ message: "Invalid item id" });
+    }
+
+    const [items] = await pool.query(
+      "SELECT id_item FROM items WHERE id_item = ? AND id_user = ?",
+      [itemId, userId]
+    );
+
+    if (items.length === 0) {
+      return res
+        .status(404)
+        .json({ message: "Item not found or not authorized" });
+    }
+
+    await pool.query(
+      "DELETE FROM images WHERE id_item = ?",
+      [itemId]
+    );
+
+    await pool.query(
+      "DELETE FROM comments WHERE id_item = ?",
+      [itemId]
+    );
+
+    await pool.query(
+      "DELETE FROM items WHERE id_item = ? AND id_user = ?",
+      [itemId, userId]
+    );
+
+    await cleanupUnusedCarImages(itemId);
+
+    res.status(200).json({
+      message: "Item deleted successfully",
+      id: itemId,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+
 };

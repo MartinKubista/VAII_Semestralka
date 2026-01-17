@@ -3,7 +3,7 @@ import { useAuth } from "../../context/useAuth";
 
 
 export function ChangeProfile() {
-  const { token, user } = useAuth(); // predpoklad: user obsahuje email, name, createdAt
+  const { token, user } = useAuth();
 
   const [name, setName] = useState(user?.name || "");
   const [errors, setErrors] = useState<{ name?: string }>({});
