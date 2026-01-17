@@ -25,7 +25,7 @@ export function ProfileReview() {
   async function loadReviews() {
     try {
       const response = await fetch(
-        `http://localhost:5000/api/item-detail/${id}/reviews`
+        `http://localhost:5000/api/review/${id}/reviews`
       );
 
       const data = await response.json();
@@ -39,7 +39,7 @@ export function ProfileReview() {
   async function deleteReview(id_reviewPar: number) {
     try {
       await fetch(
-        `http://localhost:5000/api/item-detail/delete-review/${id_reviewPar}`,
+        `http://localhost:5000/api/review/delete-review/${id_reviewPar}`,
         { method: "DELETE" }
       );
       await loadReviews();
@@ -53,7 +53,7 @@ export function ProfileReview() {
 
     try {
       await fetch(
-        `http://localhost:5000/api/item-detail/update-review/${editingId}`,
+        `http://localhost:5000/api/review/update-review/${editingId}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -73,7 +73,7 @@ export function ProfileReview() {
     async function fetchReviews() {
       try {
         const response = await fetch(
-          `http://localhost:5000/api/item-detail/${id}/reviews`
+          `http://localhost:5000/api/review/${id}/reviews`
         );
 
         const data = await response.json();
@@ -105,7 +105,7 @@ export function ProfileReview() {
     try {
       if (!validateForm()) return;
 
-      await fetch(`http://localhost:5000/api/item-detail/add-review`, {
+      await fetch(`http://localhost:5000/api/review/add-review`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -203,6 +203,24 @@ export function ProfileReview() {
           ) : (
             <p className="text-muted">Zatiaľ žiadne hodnotenia.</p>
           )}
+
+          {isLoggedIn &&  (
+          <>
+            <textarea
+              className="form-control mb-3"
+              rows={3}
+              placeholder="Napíšte svoje hodnotenie..."
+              value={newReview}
+              onChange={(e) => setNewReview(e.target.value)}
+            />
+            {errors.newReview && <p className="error-text">{errors.newReview}</p>}
+            <div className="text-left">
+              <button className="btn btn-primary" onClick={addReview}>
+                Pridať hodnotenie
+              </button>
+            </div>
+          </>
+        )}
         </div>
       </section>
     </div>
