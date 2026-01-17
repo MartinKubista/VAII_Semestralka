@@ -89,7 +89,9 @@ export function ProfilePage() {
               </div>
             </div>
             <div className="mt-3">
-              <button className="btn btn-primary me-2">Upraviť údaje</button>
+              <Link to="/changeProfile">
+                <button className="btn btn-primary me-2">Upraviť údaje</button>
+              </Link>
               <Link to="/changePassword">
                 <button className="btn btn-primary">Zmeniť heslo</button>
               </Link>
