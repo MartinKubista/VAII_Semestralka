@@ -12,6 +12,7 @@ date: string;
 
 type Item = {
   id_item: number;
+  id_user: number;
   created_at: string;
   price: number;
   name: string;
@@ -20,7 +21,7 @@ type Item = {
   condition: string;
 };
 
-type User = {
+type UserData = {
   id_user: number;
   name: string;
   email: string;
@@ -30,10 +31,10 @@ type User = {
 export function ProfilePage() {
 
   const { id } = useParams();
-  const [user, setUser] = useState<User | null>(null);
+  const [userData, setUserData] = useState<UserData | null>(null);
   const [items, setItems] = useState<Item[]>([]);
 
-  const { token} = useAuth();
+  const { token, user, isLoggedIn} = useAuth();
 
   const loadItems = async () => {
     const res = await fetch(`http://localhost:5000/api/profile/${id}/items`);
@@ -46,7 +47,7 @@ export function ProfilePage() {
       try{
         const res = await fetch(`http://localhost:5000/api/profile/${id}`);
         const dataUSer = await res.json();
-        setUser(dataUSer);
+        setUserData(dataUSer);
 
 
         await loadItems();
@@ -83,7 +84,7 @@ export function ProfilePage() {
       
   };
 
-  if (!user) return <p>Načítavam...</p>;
+  if (!userData) return <p>Načítavam...</p>;
 
 
   const reviews: Review[] = [
@@ -116,9 +117,9 @@ export function ProfilePage() {
           <hr className="border-primary mb-4"/>
             <div className="row mt-3">
               <div className="col-md-6">
-                <p className="mb-1"><strong>Meno:</strong> {user.name}</p>
-                <p className="mb-1"><strong>E-mail:</strong> {user.email}</p>
-                <p className="mb-1"><strong>Profil vytvorený:</strong> {new Date(user.created_at).toLocaleDateString("sk-SK")}</p>  
+                <p className="mb-1"><strong>Meno:</strong> {userData.name}</p>
+                <p className="mb-1"><strong>E-mail:</strong> {userData.email}</p>
+                <p className="mb-1"><strong>Profil vytvorený:</strong> {new Date(userData.created_at).toLocaleDateString("sk-SK")}</p>  
               </div>
             </div>
             <div className="mt-3">
@@ -176,14 +177,18 @@ export function ProfilePage() {
                       <p className="card-text">Stav: {item.condition}</p>
                       <p className="card-text"> Pridané: {new Date(item.created_at).toLocaleDateString("sk-SK")}</p>
                     </div>
+                    {isLoggedIn &&
+                    Number(user?.id_user) === Number(item.id_user) && (
                     <div className="card-footer d-flex justify-content-between">
                       <button className="btn btn-sm btn-warning">Upraviť</button>
                       <button className="btn btn-sm btn-danger" onClick={() => handleDelete(item.id_item)} >Zmazať</button>
                     </div>
+                    )}
                   </div>
                   </Link>
                 </div>
-              ))}
+                ))}
+
                 </div>
           </section>
         </div>

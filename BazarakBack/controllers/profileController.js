@@ -163,6 +163,7 @@ exports.showProfileItems = async (req, res) => {
     const [items] = await pool.query(`
             SELECT 
                 items.id_item,
+                items.id_user,
                 items.name,
                 items.price,
                 items.description,

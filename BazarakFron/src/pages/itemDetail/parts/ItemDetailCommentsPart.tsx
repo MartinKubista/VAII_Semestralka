@@ -130,7 +130,7 @@ export function ItemDetailCommentsPart() {
     <div className="container my-4">
       <div className="card shadow p-4 mt-4">
         <h5 className="fw-bold mb-4">💬 Komentáre</h5>
-
+        <hr className="border-primary mb-4"/>
         {comments.length > 0 ? (
           comments.map((c) => (
             <div key={c.id_comment} className="mb-3 pb-3">
