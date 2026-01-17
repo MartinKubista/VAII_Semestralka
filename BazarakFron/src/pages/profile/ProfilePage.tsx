@@ -1,4 +1,4 @@
-import { useParams,Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 
@@ -90,7 +90,9 @@ export function ProfilePage() {
             </div>
             <div className="mt-3">
               <button className="btn btn-primary me-2">Upraviť údaje</button>
-              <button className="btn btn-primary">Zmeniť heslo</button>
+              <Link to="/changePassword">
+                <button className="btn btn-primary">Zmeniť heslo</button>
+              </Link>
             </div>
           </section>
         </div>
