@@ -204,7 +204,7 @@ export function ProfileReview() {
             <p className="text-muted">Zatiaľ žiadne hodnotenia.</p>
           )}
 
-          {isLoggedIn &&  (
+          {isLoggedIn && user?.id_user !== Number(id)  &&(
           <>
             <textarea
               className="form-control mb-3"
