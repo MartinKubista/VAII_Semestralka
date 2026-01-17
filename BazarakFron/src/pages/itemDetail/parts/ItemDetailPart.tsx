@@ -1,8 +1,10 @@
-import { useParams } from "react-router-dom";
+import { useParams,Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 
 type Item = {
   id_item: number;
+  id_user: number;
+  userName: string;
   created_at: string;
   price: number;
   name: string;
@@ -72,9 +74,13 @@ export function ItemDetailPart() {
         <div className="col-md-6 order-2 order-md-2">
           <h2 className="fw-bold mb-2">{item.name}</h2>
 
-          <p className="text-primary fw-bold fs-3 mb-3">{item.price} €</p>
+          <p className="text-primary fw-bold fs-3 mb-3">{item.price}</p>
 
           <p>{item.description}</p>
+            
+          <Link to={`/profile/${item.id_user}`}  className="text-decoration-none text-reset">
+            <p className="text-muted mt-3"><strong>Autor: </strong> {item.userName}</p>
+          </Link>
 
           <p className="text-muted mt-3">
             <strong>Pridané: </strong>{new Date(item.created_at).toLocaleDateString("sk-SK")}

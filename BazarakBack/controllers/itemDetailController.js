@@ -9,10 +9,29 @@ exports.itemDetail = async (req, res) => {
             return res.status(400).json({ error: "Invalid ID" });
         }
 
-        const [[item]] = await pool.query(
-            "SELECT * FROM items WHERE id_item = ?",
-            [id]
-        );
+        const [[item]] = await pool.query(`
+            SELECT 
+                items.id_item,
+                items.id_user,
+                (
+                    SELECT name 
+                    FROM users
+                    WHERE users.id_user = items.id_user
+                ) AS userName,
+                items.name,
+                items.price,
+                items.description,
+                items.created_at,
+                (
+                    SELECT image_path 
+                    FROM images 
+                    WHERE images.id_item = items.id_item 
+                    ORDER BY id_img ASC 
+                    LIMIT 1
+                ) AS image
+            FROM items
+            WHERE id_item = ?
+        `, [id]);
 
         const [images] = await pool.query(
             "SELECT image_path FROM images WHERE id_item = ? ORDER BY id_img ASC",

@@ -6,6 +6,7 @@ const itemRoutes = require("./routes/itemRoutes");
 const imgRoutes = require("./routes/imgRoutes");
 const itemDetailRoutes = require("./routes/itemDetailRoutes");
 const showItemsRoutes = require("./routes/showItemsRoutes");
+const profileRoutes = require("./routes/profileRoutes");
 const pool = require("./db");
 
 const app = express();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use("/api/auth", authRoutes);
 app.use("/api/items", itemRoutes);
 app.use("/api/items", imgRoutes);
+app.use("/api/profile", profileRoutes);
 app.use("/api/items", showItemsRoutes);
 app.use("/api/item-detail", itemDetailRoutes);
 app.use("/uploads", express.static("uploads"));

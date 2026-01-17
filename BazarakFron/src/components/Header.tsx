@@ -35,7 +35,7 @@ export function Header() {
               <li className="nav-item">
                 <Link
                   className="nav-link d-flex align-items-center shadow-sm"
-                  to="/profile"
+                  to={`/profile/${user?.id_user}`}
                 >
                   🧑 <span className="ms-1">{user?.name}</span>
                 </Link>

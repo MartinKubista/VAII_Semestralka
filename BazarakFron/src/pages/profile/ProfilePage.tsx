@@ -1,18 +1,43 @@
-interface Review {
+import { useParams,Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+
+
+type Review = {
 name: string;
 text: string;
 date: string;
 }
 
 
-interface Ad {
+type Ad = {
 id: number;
 title: string;
 price: string;
 image: string;
 }
 
+type User = {
+  id_user: number;
+  name: string;
+  email: string;
+  created_at: string;
+};
+
 export function ProfilePage() {
+
+  const { id } = useParams();
+  const [user, setUser] = useState<User | null>(null);
+  useEffect(() => {
+    async function load() {
+      const res = await fetch(`http://localhost:5000/api/profile/${id}`);
+      const data = await res.json();
+      setUser(data);
+    }
+    load();
+  }, [id]);
+
+  if (!user) return <p>Načítavam...</p>;
+
 
   const reviews: Review[] = [
   {
@@ -58,9 +83,9 @@ export function ProfilePage() {
           <hr className="border-primary mb-4"/>
             <div className="row mt-3">
               <div className="col-md-6">
-                <p className="mb-1"><strong>Meno:</strong> Ján</p>
-                <p className="mb-1"><strong>E-mail:</strong> jan.novak@example.com</p>
-                <p className="mb-1"><strong>Dátum narodenia:</strong> 15. 5. 1998</p>
+                <p className="mb-1"><strong>Meno:</strong> {user.name}</p>
+                <p className="mb-1"><strong>E-mail:</strong> {user.email}</p>
+                <p className="mb-1"><strong>Profil vytvorený:</strong> {new Date(user.created_at).toLocaleDateString("sk-SK")}</p>  
               </div>
             </div>
             <div className="mt-3">
