@@ -58,7 +58,7 @@ exports.addComment = async (req, res) => {
             return res.status(400).json({ message: "User does not existst." });
         }
 
-        const [itemRows] = await pool.query("SELECT id_item FROM items WHERE id_item = ?", [id_item]);
+        const [itemRows] = await pool.query("SELECT id_item FROM items WHERE id_item = ?", [itemId]);
 
         if (itemRows.length === 0) {
             return res.status(400).json({ message: "Item does not existst." });

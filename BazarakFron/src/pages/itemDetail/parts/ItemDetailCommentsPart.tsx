@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
-import { useAuth } from "../../../context/AuthContext";
+import { useAuth } from "../../../context/useAuth";
 
 type Comment = {
   id_comment: number;
@@ -73,8 +73,22 @@ export function ItemDetailCommentsPart() {
   }
 
   useEffect(() => {
-    loadComments();
-  }, [id]);
+  async function fetchComments() {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/api/item-detail/${id}/comments`
+      );
+
+      const data = await response.json();
+      setComments(Array.isArray(data) ? data : []);
+    } catch (error) {
+      console.error("Error loading comments:", error);
+      setComments([]);
+    }
+  }
+
+  fetchComments();
+}, [id]);
 
   function validateForm() {
     const newErrors: { newComment?: string } = {};
