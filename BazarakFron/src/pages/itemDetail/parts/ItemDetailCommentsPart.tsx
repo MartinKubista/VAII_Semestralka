@@ -119,7 +119,7 @@ export function ItemDetailCommentsPart() {
 
         {comments.length > 0 ? (
           comments.map((c) => (
-            <div key={c.id_comment} className="mb-3 pb-3 border-bottom">
+            <div key={c.id_comment} className="mb-3 pb-3">
 
               <div className="d-flex justify-content-between">
                 <div className="fw-bold">{c.user_name}</div>
@@ -165,6 +165,7 @@ export function ItemDetailCommentsPart() {
                   <div>{c.text}</div>
                 )}
               </div>
+              <hr className="border-primary mb-4"/>
 
               {isLoggedIn &&
                 user?.id_user === c.id_user &&
