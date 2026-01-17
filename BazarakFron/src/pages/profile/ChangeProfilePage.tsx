@@ -33,7 +33,7 @@ export function ChangeProfile() {
 
     try {
       const res = await fetch(
-        "http://localhost:5000/api/profile/changeProfile",
+        "http://localhost:5000/api/profile/changeProfileData",
         {
           method: "POST",
           headers: {

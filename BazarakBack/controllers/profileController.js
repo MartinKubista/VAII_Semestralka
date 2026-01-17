@@ -93,3 +93,50 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.changeProfileData = async (req, res) => {
+  const { name } = req.body;
+  const userId = req.user.id_user;
+
+  try {
+    const trimmedName = typeof name === "string" ? name.trim() : "";
+
+    if (!trimmedName) {
+      return res.status(400).json({ message: "Name is required" });
+    }
+
+    if (trimmedName.length < 2) {
+      return res
+        .status(400)
+        .json({ message: "Name must have at least 2 characters" });
+    }
+
+    if (trimmedName.length > 50) {
+      return res
+        .status(400)
+        .json({ message: "Name can have max 50 characters" });
+    }
+
+    const [users] = await pool.query(
+      "SELECT id_user FROM users WHERE id_user = ?",
+      [userId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    await pool.query(
+      "UPDATE users SET name = ? WHERE id_user = ?",
+      [trimmedName, userId]
+    );
+
+    res.status(200).json({
+      message: "Profile data updated successfully",
+      name: trimmedName,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};
