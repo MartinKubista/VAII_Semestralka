@@ -21,6 +21,8 @@ exports.itemDetail = async (req, res) => {
                 items.name,
                 items.price,
                 items.description,
+                items.condition,
+                items.category,
                 items.created_at,
                 (
                     SELECT image_path 

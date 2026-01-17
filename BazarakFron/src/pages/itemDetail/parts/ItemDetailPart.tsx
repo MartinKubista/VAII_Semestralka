@@ -10,6 +10,8 @@ type Item = {
   name: string;
   description: string;
   images: string[];
+  category: string;
+  condition: string;
 };
 
 
@@ -81,6 +83,8 @@ export function ItemDetailPart() {
           <Link to={`/profile/${item.id_user}`}  className="text-decoration-none text-reset">
             <p className="text-muted mt-3"><strong>Autor: </strong> {item.userName}</p>
           </Link>
+          <p className="text-muted mt-3"><strong>Stav: </strong> {item.condition}</p>
+          <p className="text-muted mt-3"><strong>Kategória: </strong> {item.category}</p>
 
           <p className="text-muted mt-3">
             <strong>Pridané: </strong>{new Date(item.created_at).toLocaleDateString("sk-SK")}

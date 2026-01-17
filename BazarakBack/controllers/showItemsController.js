@@ -8,6 +8,9 @@ exports.showItems = async (req, res) => {
                 items.price,
                 items.description,
                 items.created_at,
+                items.condition,
+                items.category,
+                items.created_at,
                 (
                     SELECT image_path 
                     FROM images 

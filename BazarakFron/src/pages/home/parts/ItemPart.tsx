@@ -9,6 +9,8 @@ type Item = {
   name: string;
   description: string;
   image: string;
+  category: string;
+  condition: string;
 };
 
 export function ItemPart() {
@@ -47,6 +49,14 @@ useEffect(() => {
 
                             <p className="text-muted mb-1">
                                 Pridané: {new Date(item.created_at).toLocaleDateString("sk-SK")}
+                            </p>
+
+                            <p className="text-muted mb-1">
+                                Kategória: {item.category}
+                            </p>
+
+                            <p className="text-muted mb-1">
+                                Stav: {item.condition}
                             </p>
 
                             <p>

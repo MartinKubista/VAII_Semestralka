@@ -16,6 +16,7 @@ type Item = {
   name: string;
   image: string;
   category: string;
+  condition: string;
 };
 
 type User = {
@@ -141,6 +142,7 @@ export function ProfilePage() {
                       <h5 className="card-title">{item.name}</h5>
                       <p className="card-text">Kategória: {item.category}</p>
                       <p className="card-text">Cena: {item.price}</p>
+                      <p className="card-text">Stav: {item.condition}</p>
                       <p className="card-text"> Pridané: {new Date(item.created_at).toLocaleDateString("sk-SK")}</p>
                     </div>
                     <div className="card-footer d-flex justify-content-between">

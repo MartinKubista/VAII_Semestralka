@@ -166,6 +166,7 @@ exports.showProfileItems = async (req, res) => {
                 items.description,
                 items.created_at,
                 items.category,
+                items.condition,
                 (
                     SELECT image_path 
                     FROM images 
