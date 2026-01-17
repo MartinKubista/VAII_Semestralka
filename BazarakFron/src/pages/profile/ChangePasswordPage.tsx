@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./ChangePasswordPage.css"
+import { useAuth } from "../../context/useAuth";
+
 export function ChangePassword() {
   const [oldPassword, setOldPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -10,6 +12,8 @@ export function ChangePassword() {
     confirmPassword?: string;
   }>({});
   const [success, setSuccess] = useState("");
+
+  const { token } = useAuth();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -61,9 +65,12 @@ export function ChangePassword() {
         if (!validateForm()) return;
         const res = await fetch("http://localhost:5000/api/profile/changePassword", {
             method: "POST",
-            headers: { "Content-Type": "application/json" },
+            headers: { 
+                "Content-Type": "application/json",
+                 Authorization: `Bearer ${token}`,
+             },
             credentials: "include",
-            body: JSON.stringify({ oldPassword, newPassword }),
+            body: JSON.stringify({ oldPassword, newPassword, confirmPassword }),
         });
 
         if (!res.ok) throw new Error("Zmena hesla zlyhala");
