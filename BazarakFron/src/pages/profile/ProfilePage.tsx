@@ -2,13 +2,7 @@ import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/useAuth";
 import "./ProfilePage.css";
-
-type Review = {
-name: string;
-text: string;
-date: string;
-}
-
+import { ProfileReview } from "./parts/ProfileReviewPart";
 
 type Item = {
   id_item: number;
@@ -86,28 +80,6 @@ export function ProfilePage() {
 
   if (!userData) return <p>Načítavam...</p>;
 
-
-  const reviews: Review[] = [
-  {
-  name: "Petra Kováčová",
-  text: "Spoľahlivý predajca, komunikácia výborná. Odporúčam!",
-  date: "10. 11. 2025",
-  },
-  {
-  name: "Martin Horváth",
-  text: "Všetko prebehlo v poriadku, len doručenie trvalo dlhšie.",
-  date: "8. 11. 2025",
-  },
-  {
-  name: "Lucia Bieliková",
-  text: "Výborná skúsenosť, produkt ako nový!",
-  date: "5. 11. 2025",
-  },
-  ];
-
-
-
-
   return (
     <>
       <div className="container my-5">
@@ -134,24 +106,7 @@ export function ProfilePage() {
         </div>
       </div>
 
-      <div className="container my-5">
-        <div className="card shadow p-4">
-          <section className="mb-5">
-            <h4 className="pb-2">Hodnotenia používateľa</h4>
-            <hr className="border-primary mb-4"/>
-              <div className="list-group mt-3">
-              {reviews.map((review, index) => (
-                <div key={index} className="list-group-item">
-                  <p className="mb-1">
-                  <strong>{review.name}:</strong> {review.text}
-                  </p>
-                  <small className="text-muted">{review.date}</small>
-                </div>
-              ))}
-            </div>
-          </section>
-        </div>
-      </div>
+      <ProfileReview/>
 
       <div className="container my-5">
         <div className="card shadow p-4">
