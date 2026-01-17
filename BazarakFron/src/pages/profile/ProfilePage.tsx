@@ -160,6 +160,7 @@ export function ProfilePage() {
               <div className="row mt-3">
               {items.map((item) => (
                 <div key={item.id_item} className="col-md-4 mb-4">
+                  <Link className="linkwithoutstyle" to={`/item/${item.id_item}`}>
                   <div className="card h-100">
                     <div className="d-flex justify-content-center">
                     <img
@@ -180,6 +181,7 @@ export function ProfilePage() {
                       <button className="btn btn-sm btn-danger" onClick={() => handleDelete(item.id_item)} >Zmazať</button>
                     </div>
                   </div>
+                  </Link>
                 </div>
               ))}
                 </div>
