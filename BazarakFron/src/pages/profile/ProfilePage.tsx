@@ -1,6 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
-
+import "./ProfilePage.css";
 
 type Review = {
 name: string;
@@ -9,12 +9,14 @@ date: string;
 }
 
 
-type Ad = {
-id: number;
-title: string;
-price: string;
-image: string;
-}
+type Item = {
+  id_item: number;
+  created_at: string;
+  price: number;
+  name: string;
+  image: string;
+  category: string;
+};
 
 type User = {
   id_user: number;
@@ -27,13 +29,27 @@ export function ProfilePage() {
 
   const { id } = useParams();
   const [user, setUser] = useState<User | null>(null);
+  const [items, setItems] = useState<Item[]>([]);
+
   useEffect(() => {
-    async function load() {
-      const res = await fetch(`http://localhost:5000/api/profile/${id}`);
-      const data = await res.json();
-      setUser(data);
+    async function loadProfile() {
+      try{
+        const res = await fetch(`http://localhost:5000/api/profile/${id}`);
+        const dataUSer = await res.json();
+        setUser(dataUSer);
+
+
+        const res2 = await fetch(`http://localhost:5000/api/profile/${id}/items`);
+        const dataItems = await res2.json();
+        setItems(Array.isArray(dataItems) ? dataItems : []);
+
+      } catch (err) {
+      console.error(err);
     }
-    load();
+
+
+    }
+    loadProfile();
   }, [id]);
 
   if (!user) return <p>Načítavam...</p>;
@@ -58,20 +74,6 @@ export function ProfilePage() {
   ];
 
 
-  const ads: Ad[] = [
-  {
-  id: 1,
-  title: "iPhone 13 Pro",
-  price: "850 €",
-  image: "https://via.placeholder.com/300x200",
-  },
-  {
-  id: 2,
-  title: "Notebook Lenovo",
-  price: "450 €",
-  image: "https://via.placeholder.com/300x200",
-  },
-  ];
 
 
   return (
@@ -125,13 +127,21 @@ export function ProfilePage() {
             <h4 className="pb-2">Moje inzeráty</h4>
             <hr className="border-primary mb-4"/>
               <div className="row mt-3">
-              {ads.map((ad) => (
-                <div key={ad.id} className="col-md-4 mb-4">
+              {items.map((item) => (
+                <div key={item.id_item} className="col-md-4 mb-4">
                   <div className="card h-100">
-                    <img src={ad.image} className="card-img-top" alt={ad.title} />
+                    <div className="d-flex justify-content-center">
+                    <img
+                      src={`http://localhost:5000${item.image}`}
+                      className="card-img-top maxWidthOfImg"
+                      alt=""
+                    />
+                  </div>
                     <div className="card-body">
-                      <h5 className="card-title">{ad.title}</h5>
-                      <p className="card-text fw-bold">{ad.price}</p>
+                      <h5 className="card-title">{item.name}</h5>
+                      <p className="card-text">Kategória: {item.category}</p>
+                      <p className="card-text">Cena: {item.price}</p>
+                      <p className="card-text"> Pridané: {new Date(item.created_at).toLocaleDateString("sk-SK")}</p>
                     </div>
                     <div className="card-footer d-flex justify-content-between">
                       <button className="btn btn-sm btn-warning">Upraviť</button>

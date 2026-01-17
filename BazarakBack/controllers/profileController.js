@@ -140,3 +140,46 @@ exports.changeProfileData = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+
+exports.showProfileItems = async (req, res) => {
+    const profileId = Number(req.params.id);
+
+  if (!Number.isInteger(profileId)) {
+    return res.status(400).json({ message: "Invalid user id" });
+  }
+
+  try {
+    const [users] = await pool.query(
+      "SELECT id_user FROM users WHERE id_user = ?",
+      [profileId]
+    );
+
+    if (users.length === 0) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const [items] = await pool.query(`
+            SELECT 
+                items.id_item,
+                items.name,
+                items.price,
+                items.description,
+                items.created_at,
+                items.category,
+                (
+                    SELECT image_path 
+                    FROM images 
+                    WHERE images.id_item = items.id_item 
+                    ORDER BY id_img ASC 
+                    LIMIT 1
+                ) AS image
+            FROM items
+            WHERE id_user = ?
+        `, [profileId]);
+
+    res.status(200).json(items);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: "Server error" });
+  }
+};

@@ -12,9 +12,6 @@ export function SearchPart() {
                             className="form-control"
                             placeholder="Hľadať podľa názvu alebo popisu"
                         />
-                        <button className="btn btn-outline-primary p-2" type="button">
-                            Hľadať
-                        </button>
                     </div>
                 </div>
 

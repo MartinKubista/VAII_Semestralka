@@ -179,7 +179,7 @@ export function ItemDetailCommentsPart() {
                   <div>{c.text}</div>
                 )}
               </div>
-              <hr className="border-primary mb-4"/>
+              
 
               {isLoggedIn &&
                 user?.id_user === c.id_user &&
@@ -203,6 +203,7 @@ export function ItemDetailCommentsPart() {
                     </button>
                   </div>
                )}
+               <hr className="border-primary mb-4"/>
             </div>
           ))
         ) : (
