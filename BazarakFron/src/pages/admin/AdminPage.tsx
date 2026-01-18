@@ -84,6 +84,32 @@ export function AdminPage() {
         loadAdminData();
     }, []);
 
+
+    const deleteEntity = async (
+        url: string,
+        id: number,
+        setter: React.Dispatch<React.SetStateAction<any[]>>,
+        idKey: string
+        ) => {
+        if (!window.confirm("Naozaj chceš zmazať tento záznam?")) return;
+
+        try {
+            const res = await fetch(`${url}/${id}`, {
+            method: "DELETE",
+            credentials: "include",
+            });
+
+            if (!res.ok) {
+            throw new Error("Mazanie zlyhalo");
+            }
+
+            setter(prev => prev.filter(item => item[idKey] !== id));
+        } catch (err) {
+            console.error(err);
+            alert("Chyba pri mazaní");
+        }
+    };
+
     return (
         <>
         <div className="container my-4">
@@ -98,6 +124,7 @@ export function AdminPage() {
                         <th>Meno</th>
                         <th>Email</th>
                         <th>Vytvorený</th>
+                        <th>Akcia</th>
                     </tr>
                     </thead>
 
@@ -108,6 +135,21 @@ export function AdminPage() {
                             <td>{u.name ?? "—"}</td>
                             <td>{u.email}</td>
                             <td>{new Date(u.created_at).toLocaleString("sk-SK")}</td>
+                                                        <td>
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() =>
+                                    deleteEntity(
+                                        "http://localhost:5000/api/admin/users",
+                                        u.id_user,
+                                        setUsers,
+                                        "id_user"
+                                    )
+                                    }
+                                >
+                                    Zmaž
+                                </button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>
@@ -131,6 +173,7 @@ export function AdminPage() {
                         <th>Cena</th>
                         <th>Stav</th>
                         <th>Vytvorené</th>
+                        <th>Akcia</th>
                     </tr>
                     </thead>
 
@@ -146,6 +189,21 @@ export function AdminPage() {
                                 <span className="badge bg-success">{item.condition}</span>
                             </td>
                             <td>{new Date(item.created_at).toLocaleString("sk-SK")}</td>
+                            <td>
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() =>
+                                    deleteEntity(
+                                        "http://localhost:5000/api/admin/items",
+                                        item.id_item,
+                                        setItems,
+                                        "id_item"
+                                    )
+                                    }
+                                >
+                                    Zmaž
+                                </button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>
@@ -169,6 +227,7 @@ export function AdminPage() {
                         <th>Text</th>
                         <th>Hodnotenie</th>
                         <th>Vytvorené</th>
+                        <th>Akcia</th>
                     </tr>
                     </thead>
 
@@ -188,7 +247,21 @@ export function AdminPage() {
                                     {review.rating}
                                 </span>
                             </td>
-                            <td>{new Date(review.created_at).toLocaleString("sk-SK")}</td>
+                            <td>
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() =>
+                                    deleteEntity(
+                                        "http://localhost:5000/api/admin/reviews",
+                                        review.id_review,
+                                        setReviews,
+                                        "id_review"
+                                    )
+                                    }
+                                >
+                                    Zmaž
+                                </button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>
@@ -212,6 +285,7 @@ export function AdminPage() {
                         <th>Inzerát</th>
                         <th>Text</th>
                         <th>Vytvorené</th>
+                        <th>Akcia</th>
                     </tr>
                     </thead>
 
@@ -223,6 +297,21 @@ export function AdminPage() {
                             <td>{c.itemname}</td>
                             <td className="text-break">{c.text}</td>
                             <td>{new Date(c.created_at).toLocaleString("sk-SK")}</td>
+                            <td>
+                                <button
+                                    className="btn btn-sm btn-danger"
+                                    onClick={() =>
+                                    deleteEntity(
+                                        "http://localhost:5000/api/admin/comments",
+                                        c.id_comment,
+                                        setComments,
+                                        "id_comment"
+                                    )
+                                    }
+                                >
+                                    Zmaž
+                                </button>
+                            </td>
                         </tr>
                         ))}
                     </tbody>

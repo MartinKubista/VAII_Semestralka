@@ -87,3 +87,119 @@ exports.showComments = async (req, res) => {
     res.status(500).json({ error: "Failed to load comments" });
   }
 };
+
+
+exports.deleteComments = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM comments WHERE id_comment = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Comment not found" });
+    }
+
+    res.sendStatus(204);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete comment" });
+  }
+};
+
+
+exports.deleteReviews = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const [result] = await pool.query(
+      "DELETE FROM reviews WHERE id_review = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      return res.status(404).json({ error: "Review not found" });
+    }
+
+    res.sendStatus(204);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete review" });
+  }
+};
+
+
+exports.deleteItems = async (req, res) => {
+  const { id } = req.params;
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    await conn.query("DELETE FROM comments WHERE id_item = ?", [id]);
+
+    const [result] = await conn.query(
+      "DELETE FROM items WHERE id_item = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      await conn.rollback();
+      return res.status(404).json({ error: "Item not found" });
+    }
+
+    await conn.commit();
+    res.sendStatus(204);
+  } catch (err) {
+    await conn.rollback();
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete item" });
+  } finally {
+    conn.release();
+  }
+};
+
+
+exports.deleteUsers = async (req, res) => {
+  const { id } = req.params;
+
+  const conn = await pool.getConnection();
+  try {
+    await conn.beginTransaction();
+
+    await conn.query("DELETE FROM comments WHERE id_user = ?", [id]);
+    await conn.query("DELETE FROM reviews WHERE id_user = ?", [id]);
+
+    const [items] = await conn.query(
+      "SELECT id_item FROM items WHERE id_user = ?",
+      [id]
+    );
+
+    for (const item of items) {
+      await conn.query("DELETE FROM comments WHERE id_item = ?", [item.id_item]);
+      await conn.query("DELETE FROM items WHERE id_item = ?", [item.id_item]);
+    }
+
+    const [result] = await conn.query(
+      "DELETE FROM users WHERE id_user = ?",
+      [id]
+    );
+
+    if (result.affectedRows === 0) {
+      await conn.rollback();
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    await conn.commit();
+    res.sendStatus(204);
+  } catch (err) {
+    await conn.rollback();
+    console.error(err);
+    res.status(500).json({ error: "Failed to delete user" });
+  } finally {
+    conn.release();
+  }
+};
+
