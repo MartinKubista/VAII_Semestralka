@@ -8,6 +8,7 @@ type Review = {
   created_at: string;
   text: string;
   id_user: number;
+  id_userw: number;
   rating: number;
 };
 
@@ -152,8 +153,8 @@ export function ProfileReview() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           text: newReview,
-          id_user: user?.id_user,
-          id_item: id,
+          id_user: id,
+          id_userw: user?.id_user,
           rating: rating,
         }),
       });
@@ -242,7 +243,7 @@ export function ProfileReview() {
                 </div>
 
                 {isLoggedIn &&
-                  user?.id_user === review.id_user &&
+                  user?.id_user === review.id_userw &&
                   editingId !== review.id_review && (
                     <div className="mt-2 text-end">
                       <button

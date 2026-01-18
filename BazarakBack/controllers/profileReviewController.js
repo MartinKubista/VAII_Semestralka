@@ -1,26 +1,26 @@
 const pool = require('../db');
 
 exports.addReview = async (req, res) => {
-    const { text, id_user, id_item, rating } = req.body;
+    const { text, id_user, id_userw, rating } = req.body;
 
     const newText = typeof text === "string" ? text.trim() : "";
     const userId = Number(id_user);
-    const itemId = Number(id_item);
+    const userIdw = Number(id_userw);
     const ratingValue = Number(rating);
 
     try {
-        if (!newText || !userId || !itemId) {
+        if (!newText || !userId || !userIdw) {
             return res
                 .status(400)
-                .json({ message: "Text, id_user and id_item is required" });
+                .json({ message: "Text, id_user and userIdw is required" });
         }
 
         if (isNaN(userId)) {
             return res.status(400).json({ message: "Invalid id_user." });
         }
 
-        if (isNaN(itemId)) {
-            return res.status(400).json({ message: "Invalid id_item." });
+        if (isNaN(userIdw)) {
+            return res.status(400).json({ message: "Invalid userIdw." });
         }
 
         if (isNaN(ratingValue) || ratingValue < 1 || ratingValue > 5) {
@@ -43,8 +43,8 @@ exports.addReview = async (req, res) => {
         }
 
         const [itemRows] = await pool.query(
-            "SELECT id_item FROM items WHERE id_item = ?",
-            [itemId]
+            "SELECT id_user FROM users WHERE id_user = ?",
+            [userIdw]
         );
 
         if (itemRows.length === 0) {
@@ -52,8 +52,8 @@ exports.addReview = async (req, res) => {
         }
 
         await pool.query(
-            "INSERT INTO reviews (id_item, id_user, text, rating) VALUES (?, ?, ?, ?)",
-            [itemId, userId, newText, ratingValue]
+            "INSERT INTO reviews (id_user_w, id_user, text, rating) VALUES (?, ?, ?, ?)",
+            [userIdw, userId, newText, ratingValue]
         );
 
         res.status(201).json({ message: "Review has been added." });
@@ -76,15 +76,16 @@ exports.showReviews = async (req, res) => {
             `SELECT 
                 reviews.id_review,
                 reviews.id_user,
-                reviews.id_item,
+                reviews.id_user_w AS id_userw,
                 reviews.text,
                 reviews.rating,
                 reviews.created_at,
-                users.name AS user_name
-             FROM reviews
-             JOIN users ON reviews.id_user = users.id_user
-             WHERE reviews.id_item = ?
-             ORDER BY reviews.created_at ASC`,
+                author.name AS user_name
+            FROM reviews
+            JOIN users target ON reviews.id_user = target.id_user
+            JOIN users author ON reviews.id_user_w = author.id_user
+            WHERE reviews.id_user = ?
+            ORDER BY reviews.created_at ASC;`,
             [id]
         );
 
