@@ -111,7 +111,7 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id_user: user.id_user, email: user.email, name: user.name, role: "user" },
+            { id_user: user.id_user, email: user.email, name: user.name, role: user.role },
             JWT_SECRET,
             { expiresIn: "1d" }
         );
@@ -129,7 +129,7 @@ exports.getMe = async (req, res) => {
         const userId = req.user.id;
 
         const [rows] = await pool.query(
-            "SELECT id_user AS id, email, name FROM users WHERE id_user = ?",
+            "SELECT id_user AS id, email, name, role FROM users WHERE id_user = ?",
             [userId]
         );
 
