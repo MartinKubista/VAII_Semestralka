@@ -44,18 +44,22 @@ exports.showItems = async (req, res) => {
 exports.showReviews = async (req, res) => {
   try {
     const [rows] = await pool.query(`
-      SELECT
-        reviews.id_review,
-        u.name AS username,
-        i.name AS itemname,
-        reviews.text,
-        reviews.rating,
-        reviews.created_at
-      FROM reviews
-      JOIN users u ON u.id_user = reviews.id_user
-      JOIN items i ON i.id_item = reviews.id_user_w
-      ORDER BY reviews.created_at DESC
+      SELECT 
+            reviews.id_review,
+            reviews.id_user,
+            reviews.id_user_w AS id_userw,
+            reviews.text,
+            reviews.rating,
+            reviews.created_at,
+            author.name AS username,
+            target.name AS targetname
+        FROM reviews
+        JOIN users target ON reviews.id_user = target.id_user
+        JOIN users author ON reviews.id_user_w = author.id_user
+        ORDER BY reviews.created_at ASC;
     `);
+
+
 
     res.json(rows);
   } catch (err) {
@@ -74,6 +78,7 @@ exports.showComments = async (req, res) => {
         users.name AS username,
         items.name AS itemname,
         comments.text,
+        comments.id_item,
         comments.created_at
       FROM comments
       JOIN users ON users.id_user = comments.id_user

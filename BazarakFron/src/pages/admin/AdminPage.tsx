@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 type Item = {
   id_item: number;
@@ -13,11 +14,11 @@ type Item = {
 type Review = {
   id_review: number;
   username: string;
-  itemname: string;
   created_at: string;
   text: string;
   id_user: number;
   rating: number;
+  targetname: string;
 };
 
 
@@ -43,6 +44,8 @@ export function AdminPage() {
     const [items, setItems] = useState<Item[]>([]);
     const [reviews, setReviews] = useState<Review[]>([]);
     const [comments, setComments] = useState<Comment[]>([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         const loadAdminData = async () => {
@@ -130,7 +133,8 @@ export function AdminPage() {
 
                     <tbody>
                         {users.map((u, i) => (
-                        <tr key={u.id_user}>
+                        <tr key={u.id_user} style={{ cursor: "pointer" }}
+                            onClick={() => navigate(`/profile/${u.id_user}`)}>
                             <td>{i + 1}</td>
                             <td>{u.name ?? "—"}</td>
                             <td>{u.email}</td>
@@ -179,7 +183,8 @@ export function AdminPage() {
 
                     <tbody>
                         {items.map((item, i) => (
-                        <tr key={item.id_item}>
+                        <tr key={item.id_item} style={{ cursor: "pointer" }}
+                            onClick={() => navigate(`/item/${item.id_item}`)}>
                             <td>{i + 1}</td>
                             <td>{item.username}</td>
                             <td>{item.name}</td>
@@ -222,8 +227,8 @@ export function AdminPage() {
                     <thead className="table-dark">
                     <tr>
                         <th>#</th>
+                        <th>Profil</th>
                         <th>Autor</th>
-                        <th>Inzerát</th>
                         <th>Text</th>
                         <th>Hodnotenie</th>
                         <th>Vytvorené</th>
@@ -233,10 +238,11 @@ export function AdminPage() {
 
                     <tbody>
                         {reviews.map((review, i) => (
-                        <tr key={review.id_review}>
+                        <tr key={review.id_review} style={{ cursor: "pointer" }}
+                            onClick={() => navigate(`/profile/${review.id_user}`)}>
                             <td>{i + 1}</td>
+                            <td>{review.targetname}</td>
                             <td>{review.username}</td>
-                            <td>{review.itemname}</td>
                             <td className="text-break">{review.text}</td>
                             <td>
                                 <span className={`badge ${
@@ -247,6 +253,7 @@ export function AdminPage() {
                                     {review.rating}
                                 </span>
                             </td>
+                            <td>{new Date(review.created_at).toLocaleString("sk-SK")}</td>
                             <td>
                                 <button
                                     className="btn btn-sm btn-danger"
@@ -291,7 +298,8 @@ export function AdminPage() {
 
                     <tbody>
                         {comments.map((c, i) => (
-                        <tr key={c.id_comment}>
+                        <tr key={c.id_comment} style={{ cursor: "pointer" }}
+                            onClick={() => navigate(`/item/${c.id_item}`)}>
                             <td>{i + 1}</td>
                             <td>{c.username}</td>
                             <td>{c.itemname}</td>

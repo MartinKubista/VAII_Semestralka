@@ -43,7 +43,6 @@ export function ProfilePage() {
         const dataUSer = await res.json();
         setUserData(dataUSer);
 
-        console.log(user);
         await loadItems();
 
       } catch (err) {
