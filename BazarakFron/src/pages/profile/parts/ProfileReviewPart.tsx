@@ -33,6 +33,8 @@ export function ProfileReview() {
   const [rating, setRating] = useState(0);
   const [hover, setHover] = useState(0);
 
+  const [editingRating, setEditingRating] = useState(0);
+
   
   const StarRating: React.FC<StarRatingProps> = ({
     rating,
@@ -96,12 +98,13 @@ export function ProfileReview() {
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ text: editingText }),
+          body: JSON.stringify({ text: editingText, rating: editingRating, }),
         }
       );
 
       setEditingId(null);
       setEditingText("");
+      setEditingRating(0);
       loadReviews();
     } catch (error) {
       console.error("Error updating review:", error);
@@ -199,6 +202,15 @@ export function ProfileReview() {
                 <div className="mt-2">
                   {editingId === review.id_review ? (
                     <>
+                      <div className="d-flex align-items-center gap-2">
+                        <span>Ohodnote predajcu: </span>
+                        <StarRating
+                          rating={editingRating}
+                          hover={hover}
+                          setRating={setEditingRating}
+                          setHover={setHover}
+                        />
+                      </div>
                       <textarea
                         className="form-control"
                         value={editingText}
@@ -238,6 +250,7 @@ export function ProfileReview() {
                         onClick={() => {
                           setEditingId(review.id_review);
                           setEditingText(review.text);
+                          setEditingRating(review.rating);
                         }}
                       >
                         ✏️ Upraviť

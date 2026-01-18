@@ -97,13 +97,13 @@ exports.showReviews = async (req, res) => {
 };
 
 exports.updateReview = async (req, res) => {
-    const { text } = req.body;
+    const { text, rating } = req.body;
     const { id } = req.params;
 
     try {
         await pool.query(
-            "UPDATE reviews SET text = ? WHERE id_review = ?",
-            [text, id]
+            "UPDATE reviews SET text = ?, rating = ? WHERE id_review = ?",
+            [text, rating, id]
         );
 
         res.json({ success: true });
