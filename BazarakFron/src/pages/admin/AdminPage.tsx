@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import "./AdminPage.css";
+
 type Item = {
   id_item: number;
   username: string;
@@ -38,6 +40,8 @@ type UserData = {
   created_at: string;
 };
 
+type ActiveTable = "users" | "items" | "reviews" | "comments";
+
 export function AdminPage() {
 
     const [users, setUsers] = useState<UserData[]>([]);
@@ -46,6 +50,8 @@ export function AdminPage() {
     const [comments, setComments] = useState<Comment[]>([]);
 
     const navigate = useNavigate();
+
+    const [activeTable, setActiveTable] = useState<ActiveTable>("users");
 
     useEffect(() => {
         const loadAdminData = async () => {
@@ -117,6 +123,41 @@ export function AdminPage() {
         <>
         <div className="container my-4">
             <div className="card shadow p-4">
+                <div className="admin-tabs justify-content-center">
+                <button
+                    className={`admin-tab ${activeTable === "users" ? "active" : ""}`}
+                    onClick={() => setActiveTable("users")}
+                >
+                     Používatelia
+                </button>
+
+                <button
+                    className={`admin-tab ${activeTable === "items" ? "active" : ""}`}
+                    onClick={() => setActiveTable("items")}
+                >
+                     Inzeráty
+                </button>
+
+                <button
+                    className={`admin-tab ${activeTable === "reviews" ? "active" : ""}`}
+                    onClick={() => setActiveTable("reviews")}
+                >
+                     Hodnotenia
+                </button>
+
+                <button
+                    className={`admin-tab ${activeTable === "comments" ? "active" : ""}`}
+                    onClick={() => setActiveTable("comments")}
+                >
+                     Komentáre
+                </button>
+                </div>
+            </div>
+        </div>
+
+        {activeTable === "users" && (
+        <div className="container my-4">
+            <div className="card shadow p-4">
                 <h3 className="fw-bold mb-4">Používatelia</h3>
 
                 <div className="table-responsive">
@@ -142,14 +183,15 @@ export function AdminPage() {
                                                         <td>
                                 <button
                                     className="btn btn-sm btn-danger"
-                                    onClick={() =>
+                                    onClick={(e) => {
+                                    e.stopPropagation();
                                     deleteEntity(
                                         "http://localhost:5000/api/admin/users",
                                         u.id_user,
                                         setUsers,
                                         "id_user"
                                     )
-                                    }
+                                    }}
                                 >
                                     Zmaž
                                 </button>
@@ -161,7 +203,9 @@ export function AdminPage() {
                 </div>
             </div>
         </div>
+        )}
 
+        {activeTable === "items" && (
         <div className="container my-4">
             <div className="card shadow p-4">
                 <h3 className="fw-bold mb-4">Inzeráty</h3>
@@ -197,14 +241,15 @@ export function AdminPage() {
                             <td>
                                 <button
                                     className="btn btn-sm btn-danger"
-                                    onClick={() =>
+                                    onClick={(e) => {
+                                    e.stopPropagation();
                                     deleteEntity(
                                         "http://localhost:5000/api/admin/items",
                                         item.id_item,
                                         setItems,
                                         "id_item"
                                     )
-                                    }
+                                    }}
                                 >
                                     Zmaž
                                 </button>
@@ -217,7 +262,9 @@ export function AdminPage() {
                 </div>
             </div>
         </div>
-
+        )}
+        
+        {activeTable === "reviews" && (
         <div className="container my-4">
             <div className="card shadow p-4">
                 <h3 className="fw-bold mb-4">Hodnotenia</h3>
@@ -257,14 +304,15 @@ export function AdminPage() {
                             <td>
                                 <button
                                     className="btn btn-sm btn-danger"
-                                    onClick={() =>
+                                    onClick={(e) => {
+                                    e.stopPropagation();
                                     deleteEntity(
                                         "http://localhost:5000/api/admin/reviews",
                                         review.id_review,
                                         setReviews,
                                         "id_review"
                                     )
-                                    }
+                                    }}
                                 >
                                     Zmaž
                                 </button>
@@ -278,7 +326,9 @@ export function AdminPage() {
                 </div>
             </div>
         </div>
+        )}
 
+        {activeTable === "comments" && (
         <div className="container my-4">
             <div className="card shadow p-4">
                 <h3 className="fw-bold mb-4">Komentáre</h3>
@@ -308,14 +358,15 @@ export function AdminPage() {
                             <td>
                                 <button
                                     className="btn btn-sm btn-danger"
-                                    onClick={() =>
+                                    onClick={(e) => {
+                                    e.stopPropagation();
                                     deleteEntity(
                                         "http://localhost:5000/api/admin/comments",
                                         c.id_comment,
                                         setComments,
                                         "id_comment"
                                     )
-                                    }
+                                    }}
                                 >
                                     Zmaž
                                 </button>
@@ -327,6 +378,7 @@ export function AdminPage() {
                 </div>
             </div>
         </div>
+        )}
     </>
     );
 }
