@@ -114,7 +114,8 @@ export function ProfilePage() {
             <h4 className="pb-2">Moje inzeráty</h4>
             <hr className="border-primary mb-4"/>
               <div className="row mt-3">
-              {items.map((item) => (
+              {items.length > 0 ? (
+              items.map((item) => (
                 <div key={item.id_item} className="col-md-4 mb-4">
                   <Link className="linkwithoutstyle" to={`/item/${item.id_item}`}>
                   <div className="card h-100">
@@ -141,7 +142,10 @@ export function ProfilePage() {
                   </div>
                   </Link>
                 </div>
-                ))}
+                ))
+                ) : (
+                  <p className="text-muted">Zatiaľ žiadne inzeráty.</p>
+                )}  
 
                 </div>
           </section>

@@ -29,6 +29,16 @@ export function Header() {
               🏠 <span className="ms-1">Domov</span>
             </Link>
           </li>
+          { isLoggedIn && user?.role === "admin" && (
+            <li className="nav-item">
+                <Link
+                  className="nav-link d-flex align-items-center shadow-sm"
+                  to="/admin"
+                >
+                  🧑 <span className="ms-1">Admin panel</span>
+                </Link>
+              </li>
+          )}
 
           {isLoggedIn && (
             <>
