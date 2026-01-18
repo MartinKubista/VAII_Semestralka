@@ -1,7 +1,17 @@
 const pool = require('../db');
+
 exports.showItems = async (req, res) => {
-    try{
-        const [rows] = await pool.query(`
+    try {
+        const {
+            query,
+            category,
+            minPrice,
+            maxPrice,
+            location,
+            added
+        } = req.query;
+
+        let sql = `
             SELECT 
                 items.id_item,
                 items.name,
@@ -10,7 +20,7 @@ exports.showItems = async (req, res) => {
                 items.created_at,
                 items.condition,
                 items.category,
-                items.created_at,
+                items.location,
                 (
                     SELECT image_path 
                     FROM images 
@@ -19,14 +29,56 @@ exports.showItems = async (req, res) => {
                     LIMIT 1
                 ) AS image
             FROM items
-        `);
+            WHERE 1=1
+        `;
 
+        const params = [];
 
+        if (query) {
+            sql += ` AND (items.name LIKE ? OR items.description LIKE ?)`;
+            params.push(`%${query}%`, `%${query}%`);
+        }
+
+        if (category) {
+            sql += ` AND items.category = ?`;
+            params.push(category);
+        }
+
+        if (minPrice) {
+            sql += ` AND items.price >= ?`;
+            params.push(minPrice);
+        }
+
+        if (maxPrice) {
+            sql += ` AND items.price <= ?`;
+            params.push(maxPrice);
+        }
+
+        if (location) {
+            sql += ` AND items.location LIKE ?`;
+            params.push(`%${location}%`);
+        }
+
+        if (added) {
+            if (added === "24h") {
+                sql += ` AND items.created_at >= NOW() - INTERVAL 1 DAY`;
+            }
+            if (added === "7d") {
+                sql += ` AND items.created_at >= NOW() - INTERVAL 7 DAY`;
+            }
+            if (added === "30d") {
+                sql += ` AND items.created_at >= NOW() - INTERVAL 30 DAY`;
+            }
+        }
+
+        sql += ` ORDER BY items.created_at DESC`;
+
+        const [rows] = await pool.query(sql, params);
 
         return res.json(rows);
 
-    } catch(errors){
-        console.error(errors);
-        res.status(500).json({message: 'Server error'});
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error' });
     }
-}
+};

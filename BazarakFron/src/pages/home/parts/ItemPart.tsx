@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import './ItemPart.css';
 
@@ -13,25 +12,12 @@ type Item = {
   condition: string;
 };
 
-export function ItemPart() {
-    const [items, setItems] = useState<Item[]>([]);
+type Props = {
+    items: Item[];
+};
 
-useEffect(() => {
-     async function loadItems() {
-        try {
-            const response = await fetch("http://localhost:5000/api/items/showItems");
+export function ItemPart({ items }: Props) {
 
-            const data = await response.json();
-
-           setItems(Array.isArray(data) ? data : []);
-        } catch (error) {
-            console.error("Fetch error:", error);
-            setItems([]);
-        }
-    }
-
-    loadItems();
-}, []);
 
     return (
          <div className="row g-4">

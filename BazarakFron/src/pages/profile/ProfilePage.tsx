@@ -135,7 +135,6 @@ export function ProfilePage() {
                     {isLoggedIn &&
                     Number(user?.id_user) === Number(item.id_user) && (
                     <div className="card-footer d-flex justify-content-between">
-                      <button className="btn btn-sm btn-warning">Upraviť</button>
                       <button className="btn btn-sm btn-danger" onClick={() => handleDelete(item.id_item)} >Zmazať</button>
                     </div>
                     )}
