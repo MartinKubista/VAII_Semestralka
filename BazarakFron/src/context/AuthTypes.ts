@@ -2,6 +2,7 @@ export interface MyTokenPayload {
   id_user: number;
   email: string;
   name: string;
+  role: "admin" | "user"
 }
 
 export interface AuthContextType {

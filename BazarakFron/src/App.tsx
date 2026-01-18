@@ -1,32 +1,77 @@
+import { Header } from "./components/Header";
+import { Routes, Route } from "react-router-dom";
 
-import { Header } from "./components/Header.tsx"
-import { HomePage} from "./pages/home/HomePage.tsx"
-import { LoginPage } from "./pages/login/LoginPage.tsx"
-import { RegisterPage } from "./pages/register/RegisterPage.tsx"
-import { AddItemPage } from "./pages/addItem/AddItemPage.tsx"
-import { ProfilePage } from "./pages/profile/ProfilePage.tsx"
-import {ItemDetailPage} from "./pages/itemDetail/ItemDetailPage.tsx"
-import { ChangePassword } from "./pages/profile/ChangePasswordPage.tsx"
-import { Routes, Route } from "react-router-dom"
-import {ChangeProfile} from "./pages/profile/ChangeProfilePage.tsx"
+import { HomePage } from "./pages/home/HomePage";
+import { LoginPage } from "./pages/login/LoginPage";
+import { RegisterPage } from "./pages/register/RegisterPage";
+import { AddItemPage } from "./pages/addItem/AddItemPage";
+import { ProfilePage } from "./pages/profile/ProfilePage";
+import { ItemDetailPage } from "./pages/itemDetail/ItemDetailPage";
+import { ChangePassword } from "./pages/profile/ChangePasswordPage";
+import { ChangeProfile } from "./pages/profile/ChangeProfilePage";
+
+import { AdminPage } from "./pages/admin/AdminPage";
+
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { AdminRoute } from "./routes/AdminRoute";
 
 function App() {
-
   return (
     <>
-      <Header/>
+      <Header />
       <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/login" element={<LoginPage />}></Route>
-          <Route path="/register" element={<RegisterPage />}></Route>
-          <Route path="/add-item" element={<AddItemPage />}></Route>
-          <Route path="/profile/:id" element={<ProfilePage />}></Route>
-          <Route path="/item/:id" element={<ItemDetailPage />} />
-          <Route path="/changePassword" element={<ChangePassword />} />
-          <Route path="/changeProfile" element={<ChangeProfile />} />
+        <Route path="/" element={<HomePage />} />
+        <Route path="/item/:id" element={<ItemDetailPage />} />
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+
+        <Route
+          path="/add-item"
+          element={
+            <ProtectedRoute>
+              <AddItemPage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/profile/:id"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/changePassword"
+          element={
+            <ProtectedRoute>
+              <ChangePassword />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/changeProfile"
+          element={
+            <ProtectedRoute>
+              <ChangeProfile />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminPage />
+            </AdminRoute>
+          }
+        />
       </Routes>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

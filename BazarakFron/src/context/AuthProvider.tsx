@@ -45,6 +45,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         id_user: decoded.id_user,
         email: decoded.email,
         name: decoded.name,
+        role: decoded.role
       },
       token,
       isLoggedIn: true,

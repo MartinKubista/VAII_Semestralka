@@ -57,8 +57,8 @@ try {
     const hashedPassword = await bcrypt.hash(trimmedPassword, 10);
 
     await pool.query(
-        "INSERT INTO users (name, email, password) VALUES (?, ?, ?)",
-        [trimmedName, trimmedEmail, hashedPassword]
+        "INSERT INTO users (name, email, password, role) VALUES (?, ?, ?, ?)",
+        [trimmedName, trimmedEmail, hashedPassword, "user"]
     );
 
     res.status(201).json({ message: "User registered successfully" });
@@ -111,7 +111,7 @@ exports.loginUser = async (req, res) => {
         }
 
         const token = jwt.sign(
-            { id_user: user.id_user, email: user.email, name: user.name },
+            { id_user: user.id_user, email: user.email, name: user.name, role: "user" },
             JWT_SECRET,
             { expiresIn: "1d" }
         );
