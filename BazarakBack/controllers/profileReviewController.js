@@ -1,11 +1,12 @@
 const pool = require('../db');
 
 exports.addReview = async (req, res) => {
-    const { text, id_user, id_item } = req.body;
+    const { text, id_user, id_item, rating } = req.body;
 
     const newText = typeof text === "string" ? text.trim() : "";
     const userId = Number(id_user);
     const itemId = Number(id_item);
+    const ratingValue = Number(rating);
 
     try {
         if (!newText || !userId || !itemId) {
@@ -20,6 +21,12 @@ exports.addReview = async (req, res) => {
 
         if (isNaN(itemId)) {
             return res.status(400).json({ message: "Invalid id_item." });
+        }
+
+        if (isNaN(ratingValue) || ratingValue < 1 || ratingValue > 5) {
+            return res.status(400).json({
+                message: "Rating must be a number between 1 and 5.",
+            });
         }
 
         if (newText.length > 500) {
@@ -45,8 +52,8 @@ exports.addReview = async (req, res) => {
         }
 
         await pool.query(
-            "INSERT INTO reviews (id_item, id_user, text) VALUES (?, ?, ?)",
-            [itemId, userId, newText]
+            "INSERT INTO reviews (id_item, id_user, text, rating) VALUES (?, ?, ?, ?)",
+            [itemId, userId, newText, ratingValue]
         );
 
         res.status(201).json({ message: "Review has been added." });
@@ -71,6 +78,7 @@ exports.showReviews = async (req, res) => {
                 reviews.id_user,
                 reviews.id_item,
                 reviews.text,
+                reviews.rating,
                 reviews.created_at,
                 users.name AS user_name
              FROM reviews

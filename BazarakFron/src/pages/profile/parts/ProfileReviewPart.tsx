@@ -8,6 +8,14 @@ type Review = {
   created_at: string;
   text: string;
   id_user: number;
+  rating: number;
+};
+
+type StarRatingProps = {
+  rating: number;
+  hover: number;
+  setRating: React.Dispatch<React.SetStateAction<number>>;
+  setHover: React.Dispatch<React.SetStateAction<number>>;
 };
 
 export function ProfileReview() {
@@ -21,6 +29,37 @@ export function ProfileReview() {
   const [editingText, setEditingText] = useState("");
 
   const [errors, setErrors] = useState<{ newReview?: string }>({});
+
+  const [rating, setRating] = useState(0);
+  const [hover, setHover] = useState(0);
+
+  
+  const StarRating: React.FC<StarRatingProps> = ({
+    rating,
+    hover,
+    setRating,
+    setHover,
+  }) => {
+    return (
+      <div className="mb-2">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <span
+            key={star}
+            style={{
+              fontSize: "1.5rem",
+              cursor: "pointer",
+              color: star <= (hover || rating) ? "#ffc107" : "#e4e5e9",
+            }}
+            onClick={() => setRating(star)}
+            onMouseEnter={() => setHover(star)}
+            onMouseLeave={() => setHover(0)}
+          >
+            ★
+          </span>
+        ))}
+      </div>
+    );
+  };
 
   async function loadReviews() {
     try {
@@ -112,6 +151,7 @@ export function ProfileReview() {
           text: newReview,
           id_user: user?.id_user,
           id_item: id,
+          rating: rating,
         }),
       });
 
@@ -141,6 +181,19 @@ export function ProfileReview() {
                   <small className="text-muted">
                     {new Date(review.created_at).toLocaleDateString("sk-SK")}
                   </small>
+                </div>
+                <div className="mb-1">
+                  <span>Hodnotenie predajcu: </span>
+                  {[1, 2, 3, 4, 5].map((star) => (
+                    <span
+                      key={star}
+                      style={{
+                        color: star <= review.rating ? "#ffc107" : "#e4e5e9"
+                      }}
+                    >
+                      ★
+                    </span>
+                  ))}
                 </div>
 
                 <div className="mt-2">
@@ -206,6 +259,15 @@ export function ProfileReview() {
 
           {isLoggedIn && user?.id_user !== Number(id)  &&(
           <>
+            <div className="d-flex align-items-center gap-2">
+              <span>Ohodnote predajcu: </span>
+              <StarRating
+                rating={rating}
+                hover={hover}
+                setRating={setRating}
+                setHover={setHover}
+              />
+            </div>
             <textarea
               className="form-control mb-3"
               rows={3}
