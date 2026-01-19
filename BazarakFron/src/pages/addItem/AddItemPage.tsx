@@ -182,7 +182,7 @@ export function AddItemPage() {
 
           <div className="mb-3">
             <label className="form-label">Cena (€):</label>
-            <input value={price} onChange={(e) => setPrice(e.target.value)} type="number" className="form-control" placeholder="Zadajte cenu"  />
+            <input value={price} onChange={(e) => setPrice(e.target.value)} type="number" className="form-control" placeholder="Zadajte cenu" min="0" step="100" />
             {errors.price && <div className="error-text">{errors.price}</div>}
           </div>
 
