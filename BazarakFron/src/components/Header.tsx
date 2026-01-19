@@ -1,11 +1,15 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/useAuth";
+import homeIcon from "../assets/home.png";
+import logoutIcon from "../assets/logout.png";
+import profileIcon from "../assets/profile.png";
+import adminPanelIcon from "../assets/admin_panel.png";
 import './Header.css';
 
 export function Header() {
     const { isLoggedIn, user, logout} = useAuth();
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4">
+    <nav className="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-4 d-flex">
       <Link className="navbar-brand fw-bold text-primary" to="/">
         Bazarák
       </Link>
@@ -19,53 +23,51 @@ export function Header() {
         <span className="navbar-toggler-icon"></span>
       </button>
 
-      <div
-        className="collapse navbar-collapse justify-content-end"
-        id="navbarTogglerDemo01"
-      >
-        <ul className="navbar-nav allign-items-center gap-2">
+      <div className="collapse navbar-collapse justify-content-end" id="navbarTogglerDemo01">
+        <ul className="navbar-nav align-items-center gap-2">
+
           <li className="nav-item">
-            <Link className="nav-link d-flex align-items-center shadow-sm" to="/">
-              🏠 <span className="ms-1">Domov</span>
+            <Link className="nav-link nav-link-icon d-flex" to="/">
+              <img src={homeIcon} alt="" />
+              <span>Domov</span>
             </Link>
           </li>
-          { isLoggedIn && user?.role === "admin" && (
+
+          {isLoggedIn && user?.role === "admin" && (
             <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center shadow-sm"
-                  to="/admin"
-                >
-                  🧑 <span className="ms-1">Admin panel</span>
-                </Link>
-              </li>
+              <Link className="nav-link nav-link-icon d-flex" to="/admin">
+                <img src={adminPanelIcon} alt="" />
+                <span>Admin panel</span>
+              </Link>
+            </li>
           )}
 
           {isLoggedIn && (
             <>
               <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center shadow-sm"
-                  to={`/profile/${user?.id_user}`}
-                >
-                  🧑 <span className="ms-1">{user?.name}</span>
+                <Link className="nav-link nav-link-icon d-flex" to={`/profile/${user?.id_user}`}>
+                  <img src={profileIcon} alt="" />
+                  <span>{user?.name}</span>
                 </Link>
               </li>
 
               <li className="nav-item">
                 <button
-                  className="nav-link d-flex align-items-center shadow-sm btn"
+                  className="nav-link nav-link-icon d-flex"
+                  type="button"
                   onClick={logout}
                 >
-                  🚪 <span className="ms-1">Odhlásiť sa</span>
+                  <img src={logoutIcon} alt="" />
+                  <span>Odhlásiť sa</span>
                 </button>
               </li>
 
-              <li className="nav-item">
+              <li className="nav-item ms-2">
                 <Link
-                  className="headerAddItem nav-link rounded text-light bg-primary fw-bold"
+                  className="btn btn-primary fw-bold px-3 d-flex"
                   to="/add-item"
                 >
-                  Pridať nový inzerát
+                  + Pridať inzerát
                 </Link>
               </li>
             </>
@@ -74,20 +76,16 @@ export function Header() {
           {!isLoggedIn && (
             <>
               <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center shadow-sm"
-                  to="/login"
-                >
-                  👤 <span className="ms-1">Prihlásiť sa</span>
+                <Link className="nav-link nav-link-icon d-flex" to="/login">
+                  <img src={profileIcon} alt="" />
+                  <span>Prihlásiť sa</span>
                 </Link>
               </li>
 
               <li className="nav-item">
-                <Link
-                  className="nav-link d-flex align-items-center shadow-sm"
-                  to="/register"
-                >
-                  👤 <span className="ms-1">Registrovať</span>
+                <Link className="nav-link nav-link-icon d-flex" to="/register">
+                  <img src={profileIcon} alt="" />
+                  <span>Registrovať</span>
                 </Link>
               </li>
             </>

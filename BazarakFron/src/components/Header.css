@@ -1,3 +1,27 @@
+.nav-link-icon {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border-radius: 6px;
+  transition: background-color 0.2s ease;
+}
+
+.nav-link-icon img {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+.nav-link-icon:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.navbar-nav .btn-link {
+  text-decoration: none;
+  color: inherit;
+}
+
 @media (max-width: 991px) {
     .headerAddItem {
         display: inline-block !important;
