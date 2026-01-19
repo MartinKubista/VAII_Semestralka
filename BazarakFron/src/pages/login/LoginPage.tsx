@@ -7,6 +7,7 @@ export function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [errors, setErrors] = useState<{email?: string, password?:string}>({});
+  const [serverError, setServerError] = useState("");
   const navigate = useNavigate();
   const { login } = useAuth();
 
@@ -43,6 +44,8 @@ export function LoginPage() {
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
 
+    setServerError("");
+
     if (!validateForm()) return;
 
     const res = await fetch("http://localhost:5000/api/auth/login", {
@@ -52,7 +55,7 @@ export function LoginPage() {
     });
 
     if (!res.ok) {
-      alert("Nesprávny email alebo heslo");
+      setServerError("Nesprávny email alebo heslo");
       return;
     }
 
@@ -95,6 +98,7 @@ export function LoginPage() {
           </div>
 
           <div className="form-actions">
+            {serverError && <p className="error-text text-center">{serverError}</p>}
             <button type="submit" className="btn-submit">
               Prihlásiť
             </button>

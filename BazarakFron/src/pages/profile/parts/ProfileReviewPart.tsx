@@ -29,10 +29,11 @@ export function ProfileReview() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
-  const [errors, setErrors] = useState<{ newReview?: string }>({});
+  const [errors, setErrors] = useState<{ newReview?: string, newRating?: string, updateReview?: string, updateRating?: string}>({});
 
   const [rating, setRating] = useState(0);
-  const [hover, setHover] = useState(0);
+  const [hoverNew, setHoverNew] = useState(0);
+  const [hoverEdit, setHoverEdit] = useState(0);
 
   const [editingRating, setEditingRating] = useState(0);
 
@@ -93,6 +94,8 @@ export function ProfileReview() {
   async function updateReview() {
     if (editingId === null) return;
 
+    if (!validateEditForm()) return;
+
     try {
       await fetch(
         `http://localhost:5000/api/review/update-review/${editingId}`,
@@ -131,8 +134,13 @@ export function ProfileReview() {
   }, [id]);
 
   function validateForm() {
-    const newErrors: { newReview?: string } = {};
+    const newErrors: { newReview?: string, newRating?: string } = {};
     const text = newReview.trim();
+    const ratingValue = rating;
+
+    if (ratingValue < 1 || ratingValue > 5) {
+      newErrors.newRating = "Hodnotenie musí byť medzi 1 a 5 hviezdičkami.";
+    }
 
     if (!text) {
       newErrors.newReview = "Napíš recenziu";
@@ -143,6 +151,25 @@ export function ProfileReview() {
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   }
+
+    function validateEditForm() {
+      const newErrors: { updateReview?: string; updateRating?: string } = {};
+      const text = editingText.trim();
+      const ratingValue = editingRating;
+
+      if (ratingValue < 1 || ratingValue > 5) {
+        newErrors.updateRating = "Hodnotenie musí byť medzi 1 a 5 hviezdičkami.";
+      }
+
+      if (!text) {
+        newErrors.updateReview = "Napíš recenziu";
+      } else if (text.length > 500) {
+        newErrors.updateReview = "Recenzia môže mať max 500 znakov.";
+      }
+
+      setErrors(newErrors);
+      return Object.keys(newErrors).length === 0;
+    }
 
   async function addReview() {
     try {
@@ -207,17 +234,18 @@ export function ProfileReview() {
                         <span>Ohodnote predajcu: </span>
                         <StarRating
                           rating={editingRating}
-                          hover={hover}
+                          hover={hoverEdit}
                           setRating={setEditingRating}
-                          setHover={setHover}
+                          setHover={setHoverEdit}
                         />
                       </div>
+                      {errors.updateRating && <p className="error-text">{errors.updateRating}</p>}
                       <textarea
                         className="form-control"
                         value={editingText}
                         onChange={(e) => setEditingText(e.target.value)}
                       />
-
+                      {errors.updateReview && <p className="error-text">{errors.updateReview}</p>}
                       <div className="mt-2">
                         <button
                           className="btn btn-success btn-sm me-2"
@@ -277,11 +305,12 @@ export function ProfileReview() {
               <span>Ohodnote predajcu: </span>
               <StarRating
                 rating={rating}
-                hover={hover}
+                hover={hoverNew}
                 setRating={setRating}
-                setHover={setHover}
+                setHover={setHoverNew}
               />
             </div>
+            {errors.newRating && <p className="error-text">{errors.newRating}</p>}
             <textarea
               className="form-control mb-3"
               rows={3}

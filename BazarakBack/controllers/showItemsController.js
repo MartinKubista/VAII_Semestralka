@@ -15,6 +15,7 @@ exports.showItems = async (req, res) => {
             SELECT 
                 items.id_item,
                 items.name,
+                (SELECT name FROM users WHERE users.id_user = items.id_user) AS username,
                 items.price,
                 items.description,
                 items.created_at,

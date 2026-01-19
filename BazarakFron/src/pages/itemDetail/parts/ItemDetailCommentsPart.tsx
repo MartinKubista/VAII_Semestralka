@@ -20,7 +20,7 @@ export function ItemDetailCommentsPart() {
   const [editingId, setEditingId] = useState<number | null>(null);
   const [editingText, setEditingText] = useState("");
 
-  const [errors, setErrors] = useState<{ newComment?: string }>({});
+  const [errors, setErrors] = useState<{ newComment?: string, editComment?: string; }>({});
 
   async function loadComments() {
     try {
@@ -53,6 +53,8 @@ export function ItemDetailCommentsPart() {
 
   async function updateComment() {
     if (editingId === null) return;
+
+    if (!validateEditForm()) return;
 
     try {
       await fetch(
@@ -106,6 +108,21 @@ export function ItemDetailCommentsPart() {
     return Object.keys(newErrors).length === 0;
   }
 
+  function validateEditForm() {
+    const newErrors: { editComment?: string } = {};
+    const text = editingText.trim();
+
+    if (!text) {
+      newErrors.editComment = "Napíš komentár";
+    } else if (text.length > 500) {
+      newErrors.editComment = "Komentár môže mať max 500 znakov.";
+    }
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  }
+
   async function addComment() {
     try {
       if (!validateForm()) return;
@@ -129,7 +146,7 @@ export function ItemDetailCommentsPart() {
   return (
     <div className="container my-4">
       <div className="card shadow p-4 mt-4">
-        <h5 className="fw-bold mb-4">💬 Komentáre</h5>
+        <h5 className="fw-bold mb-4">Komentáre</h5>
         <hr className="border-primary mb-4"/>
         {comments.length > 0 ? (
           comments.map((c) => (
@@ -157,7 +174,7 @@ export function ItemDetailCommentsPart() {
                       value={editingText}
                       onChange={(e) => setEditingText(e.target.value)}
                     />
-
+                    {errors.editComment && (<p className="error-text">{errors.editComment}</p>)}
                     <button
                       className="btn btn-success btn-sm mt-2 me-2"
                       onClick={updateComment}

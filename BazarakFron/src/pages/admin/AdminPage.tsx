@@ -233,10 +233,8 @@ export function AdminPage() {
                             <td>{item.username}</td>
                             <td>{item.name}</td>
                             <td>{item.category}</td>
-                            <td className="fw-bold text-primary">{item.price} €</td>
-                            <td>
-                                <span className="badge bg-success">{item.condition}</span>
-                            </td>
+                            <td>{item.price} €</td>
+                            <td>{item.condition}</td>
                             <td>{new Date(item.created_at).toLocaleString("sk-SK")}</td>
                             <td>
                                 <button
@@ -292,13 +290,16 @@ export function AdminPage() {
                             <td>{review.username}</td>
                             <td className="text-break">{review.text}</td>
                             <td>
-                                <span className={`badge ${
-                                    review.rating === 0 ? "bg-secondary" :
-                                    review.rating >= 5 ? "bg-success" :
-                                    "bg-warning text-dark"
-                                }`}>
-                                    {review.rating}
-                                </span>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span
+                                    key={star}
+                                    style={{
+                                        color: star <= review.rating ? "#ffc107" : "#e4e5e9"
+                                    }}
+                                    >
+                                    ★
+                                    </span>
+                                ))}
                             </td>
                             <td>{new Date(review.created_at).toLocaleString("sk-SK")}</td>
                             <td>

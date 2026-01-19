@@ -35,7 +35,7 @@ export function ChangeProfile() {
       const res = await fetch(
         "http://localhost:5000/api/profile/changeProfileData",
         {
-          method: "POST",
+          method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,

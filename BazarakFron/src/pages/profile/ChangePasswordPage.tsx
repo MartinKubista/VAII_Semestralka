@@ -64,7 +64,7 @@ export function ChangePassword() {
 
         if (!validateForm()) return;
         const res = await fetch("http://localhost:5000/api/profile/changePassword", {
-            method: "POST",
+            method: "PUT",
             headers: { 
                 "Content-Type": "application/json",
                  Authorization: `Bearer ${token}`,

@@ -14,7 +14,7 @@ export function AddItemPage() {
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [description, setDescription] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [condition, setCondition] = useState("");
   const [location, setLocation] = useState("");
 
@@ -182,7 +182,7 @@ export function AddItemPage() {
 
           <div className="mb-3">
             <label className="form-label">Cena (€):</label>
-            <input value={price} onChange={(e) => setPrice(Number(e.target.value))} type="number" className="form-control" placeholder="Zadajte cenu"  />
+            <input value={price} onChange={(e) => setPrice(e.target.value)} type="number" className="form-control" placeholder="Zadajte cenu"  />
             {errors.price && <div className="error-text">{errors.price}</div>}
           </div>
 
@@ -200,6 +200,7 @@ export function AddItemPage() {
           <div className="mb-3">
             <label className="form-label">Lokalita:</label>
             <input value={location} onChange={(e) => setLocation(e.target.value)} type="text" className="form-control" placeholder="Zadajte mesto alebo okres" />
+            {errors.location && <div className="error-text">{errors.location}</div>}
           </div>
 
           <div className="mb-3">

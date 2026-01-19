@@ -3,6 +3,7 @@ import './ItemPart.css';
 
 type Item = {
   id_item: number;
+  username: string;
   created_at: string;
   price: number;
   name: string;
@@ -31,6 +32,10 @@ export function ItemPart({ items }: Props) {
 
                             <p className="text-success fw-bold fs-5">
                                 {item.price} €
+                            </p>
+                            
+                            <p className="text-muted mb-1">
+                                Autor: {item.username}
                             </p>
 
                             <p className="text-muted mb-1">

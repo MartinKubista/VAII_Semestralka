@@ -7,6 +7,6 @@ const { showProfile, changePassword, changeProfileData, showProfileItems, delete
 router.get('/:id', showProfile);
 router.get('/:id/items', showProfileItems);
 router.delete('/:id/deleteItem', authMiddleware, deleteProfileItem);
-router.post('/changePassword',authMiddleware, changePassword);
-router.post('/changeProfileData',authMiddleware, changeProfileData);
+router.put('/changePassword',authMiddleware, changePassword);
+router.put('/changeProfileData',authMiddleware, changeProfileData);
 module.exports = router;

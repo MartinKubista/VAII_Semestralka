@@ -4,6 +4,7 @@ import {SearchPart} from "./parts/SearchPart";
 
 type Item = {
   id_item: number;
+  username: string;
   created_at: string;
   price: number;
   name: string;
