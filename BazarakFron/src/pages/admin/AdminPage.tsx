@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../context/useAuth";
 
 import "./AdminPage.css";
 
@@ -49,27 +50,36 @@ export function AdminPage() {
     const [reviews, setReviews] = useState<Review[]>([]);
     const [comments, setComments] = useState<Comment[]>([]);
 
+    const { token } = useAuth();
+
     const navigate = useNavigate();
 
     const [activeTable, setActiveTable] = useState<ActiveTable>("users");
 
-    useEffect(() => {
-        const loadAdminData = async () => {
+    const loadAdminData = async () => {
             try {
             const usersRes = await fetch("http://localhost:5000/api/admin/users", {
-                credentials: "include",
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             const itemsRes = await fetch("http://localhost:5000/api/admin/items", {
-                credentials: "include",
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             const reviewsRes = await fetch("http://localhost:5000/api/admin/reviews", {
-                credentials: "include",
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             const commentsRes = await fetch("http://localhost:5000/api/admin/comments", {
-                credentials: "include",
+                headers: { 
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             const usersData = await usersRes.json();
@@ -90,8 +100,10 @@ export function AdminPage() {
             }
         };
 
+    useEffect(() => {
         loadAdminData();
     }, []);
+
 
 
     const deleteEntity = async (
@@ -105,12 +117,16 @@ export function AdminPage() {
         try {
             const res = await fetch(`${url}/${id}`, {
             method: "DELETE",
-            credentials: "include",
+            headers: { 
+                    Authorization: `Bearer ${token}`,
+                },
             });
 
             if (!res.ok) {
-            throw new Error("Mazanie zlyhalo");
+                throw new Error("Mazanie zlyhalo");
             }
+
+            await loadAdminData();
 
             setter(prev => prev.filter(item => item[idKey] !== id));
         } catch (err) {

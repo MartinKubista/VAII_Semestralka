@@ -64,7 +64,6 @@ export function SearchPart({ onSearch }: Props) {
                                 className="form-control"
                                 placeholder="Min €"
                                 min="0"
-                                step="100"
                                 value={minPrice}
                                 onChange={e => setMinPrice(e.target.value)}
                             />
@@ -73,7 +72,6 @@ export function SearchPart({ onSearch }: Props) {
                                 className="form-control"
                                 placeholder="Max €"
                                 min="0"
-                                step="100"
                                 value={maxPrice}
                                 onChange={e => setMaxPrice(e.target.value)}
                             />

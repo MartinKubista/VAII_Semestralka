@@ -21,7 +21,7 @@ type StarRatingProps = {
 
 export function ProfileReview() {
   const { id } = useParams();
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, token } = useAuth();
 
   const [reviews, setReviews] = useState<Review[]>([]);
   const [newReview, setNewReview] = useState("");
@@ -83,7 +83,9 @@ export function ProfileReview() {
     try {
       await fetch(
         `http://localhost:5000/api/review/delete-review/${id_reviewPar}`,
-        { method: "DELETE" }
+        { method: "DELETE",
+          headers: { Authorization: `Bearer ${token}`,},
+         }
       );
       await loadReviews();
     } catch (error) {
@@ -101,7 +103,9 @@ export function ProfileReview() {
         `http://localhost:5000/api/review/update-review/${editingId}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+           },
           body: JSON.stringify({ text: editingText, rating: editingRating, }),
         }
       );
@@ -177,11 +181,12 @@ export function ProfileReview() {
 
       await fetch(`http://localhost:5000/api/review/add-review`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({
           text: newReview,
           id_user: id,
-          id_userw: user?.id_user,
           rating: rating,
         }),
       });

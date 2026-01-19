@@ -1,10 +1,12 @@
 const pool = require('../db');
+const {cleanupUnusedCarImages} = require('../cleanUnusedImages.js');
 
 exports.showUsers = async (req, res) => {
   try {
     const [rows] = await pool.query(`
       SELECT id_user, name, email, created_at
       FROM users
+      WHERE role = "user"
       ORDER BY created_at DESC
     `);
 
@@ -144,6 +146,7 @@ exports.deleteItems = async (req, res) => {
     await conn.beginTransaction();
 
     await conn.query("DELETE FROM comments WHERE id_item = ?", [id]);
+    await pool.query("DELETE FROM images WHERE id_item = ?", [id]);
 
     const [result] = await conn.query(
       "DELETE FROM items WHERE id_item = ?",
@@ -154,6 +157,8 @@ exports.deleteItems = async (req, res) => {
       await conn.rollback();
       return res.status(404).json({ error: "Item not found" });
     }
+
+    await cleanupUnusedCarImages(id);
 
     await conn.commit();
     res.sendStatus(204);
@@ -183,8 +188,9 @@ exports.deleteUsers = async (req, res) => {
     );
 
     for (const item of items) {
-      await conn.query("DELETE FROM comments WHERE id_item = ?", [item.id_item]);
+      await pool.query("DELETE FROM images WHERE id_item = ?", [item.id_item]);
       await conn.query("DELETE FROM items WHERE id_item = ?", [item.id_item]);
+
     }
 
     const [result] = await conn.query(
@@ -196,6 +202,8 @@ exports.deleteUsers = async (req, res) => {
       await conn.rollback();
       return res.status(404).json({ error: "User not found" });
     }
+
+    await cleanupUnusedCarImages(id);
 
     await conn.commit();
     res.sendStatus(204);

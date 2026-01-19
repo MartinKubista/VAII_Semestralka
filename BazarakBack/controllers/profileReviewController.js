@@ -1,11 +1,11 @@
 const pool = require('../db');
 
 exports.addReview = async (req, res) => {
-    const { text, id_user, id_userw, rating } = req.body;
+    const { text, id_user, rating } = req.body;
 
     const newText = typeof text === "string" ? text.trim() : "";
     const userId = Number(id_user);
-    const userIdw = Number(id_userw);
+    const userIdw = req.user.id_user;
     const ratingValue = Number(rating);
 
     try {
@@ -99,42 +99,80 @@ exports.showReviews = async (req, res) => {
 
 exports.updateReview = async (req, res) => {
     const { text, rating } = req.body;
-    const { id } = req.params;
+    const reviewId = Number(req.params.id);
+    const userId = req.user.id_user;
+
+    if (!Number.isInteger(reviewId) || reviewId <= 0) {
+        return res.status(400).json({ error: "Invalid review ID" });
+    }
+
+    if (typeof text !== "string" || text.trim() === "") {
+        return res.status(400).json({ error: "Invalid text" });
+    }
+
+    if (!Number.isInteger(rating) || rating < 1 || rating > 5) {
+        return res.status(400).json({ error: "Invalid rating" });
+    }
 
     try {
+        const [[review]] = await pool.query(
+            "SELECT id_user_w FROM reviews WHERE id_review = ?",
+            [reviewId]
+        );
+
+        if (!review) {
+            return res.status(404).json({ error: "Review not found" });
+        }
+
+        if (review.id_user_w !== userId) {
+            return res.status(403).json({ error: "You are not allowed to edit this review" });
+        }
+
         await pool.query(
             "UPDATE reviews SET text = ?, rating = ? WHERE id_review = ?",
-            [text, rating, id]
+            [text, rating, reviewId]
         );
 
         res.json({ success: true });
+
     } catch (err) {
         console.error(err);
         res.status(500).json({ error: "Database error" });
     }
 };
 
-exports.deleteReview = async (req, res) => {
-    try {
-        const reviewId = req.params.id;
 
-        if (!reviewId || isNaN(reviewId)) {
-            return res.status(400).json({ message: "Invalid review ID" });
+exports.deleteReview = async (req, res) => {
+    const reviewId = parseInt(req.params.id, 10);
+    const userId = req.user.id;
+
+    if (!Number.isInteger(reviewId) || reviewId <= 0) {
+        return res.status(400).json({ message: "Invalid review ID" });
+    }
+
+    try {
+        const [[review]] = await pool.query(
+            "SELECT id_user_w FROM reviews WHERE id_review = ?",
+            [reviewId]
+        );
+
+        if (!review) {
+            return res.status(404).json({ message: "Review not found" });
         }
 
-        const [result] = await pool.query(
+        if (review.id_userw !== userId) {
+            return res.status(403).json({ message: "You are not allowed to delete this review" });
+        }
+
+        await pool.query(
             "DELETE FROM reviews WHERE id_review = ?",
             [reviewId]
         );
 
-        if (result.affectedRows === 0) {
-            return res.status(404).json({ message: "Review not found" });
-        }
-
         res.json({ message: "Review deleted successfully" });
 
-    } catch (errors) {
-        console.error(errors);
+    } catch (error) {
+        console.error(error);
         res.status(500).json({ message: "Server error" });
     }
 };

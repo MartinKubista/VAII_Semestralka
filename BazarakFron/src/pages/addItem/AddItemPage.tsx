@@ -5,6 +5,7 @@ import type{ ChangeEvent, FormEvent } from "react";
 import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 interface ImagePreview {
   file: File;
   preview: string;
@@ -18,7 +19,7 @@ export function AddItemPage() {
   const [condition, setCondition] = useState("");
   const [location, setLocation] = useState("");
 
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, token } = useAuth();
   const navigate = useNavigate();
   const [images, setImages] = useState<ImagePreview[]>([]);
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -60,11 +61,13 @@ export function AddItemPage() {
 
     if (!validateForm()) return;
 
-    const id_user = user?.id_user;
     await fetch("http://localhost:5000/api/items/add-item", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id_user ,name, category, description, price, condition, location}),
+        headers: { 
+          "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`,
+         },
+        body: JSON.stringify({ name, category, description, price, condition, location}),
     });
 
     
@@ -76,6 +79,9 @@ export function AddItemPage() {
 
     await fetch("http://localhost:5000/api/items/add-imgs", {
       method: "POST",
+      headers: { 
+           Authorization: `Bearer ${token}`,
+         },
       body: formData
     });
 
@@ -182,7 +188,7 @@ export function AddItemPage() {
 
           <div className="mb-3">
             <label className="form-label">Cena (€):</label>
-            <input value={price} onChange={(e) => setPrice(e.target.value)} type="number" className="form-control" placeholder="Zadajte cenu" min="0" step="100" />
+            <input value={price} onChange={(e) => setPrice(e.target.value)} type="number" className="form-control" placeholder="Zadajte cenu" min="0" />
             {errors.price && <div className="error-text">{errors.price}</div>}
           </div>
 

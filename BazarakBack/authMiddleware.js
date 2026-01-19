@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
         req.user = decoded;
         next();
     } catch (err) {
-        console.error("JWT Error:", error);
+        console.error("JWT Error:", err);
         return res.status(403).json({ message: "Neplatný alebo expirovaný token." });
     }
 

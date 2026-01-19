@@ -50,10 +50,10 @@ exports.itemDetail = async (req, res) => {
 }  
 
 exports.addComment = async (req, res) => {
-    const { text, id_user, id_item } = req.body;
+    const { text, id_item } = req.body;
 
     const newText = typeof text === "string" ? text.trim() : "";
-    const userId = Number(id_user);
+    const userId = req.user.id_user;
     const itemId = Number(id_item);
 
     try {
@@ -124,13 +124,36 @@ exports.showComments = async (req, res) => {
 
 exports.updateComment = async (req, res) => {
     const { text } = req.body;
-    const { id } = req.params;
+    const commentId = Number(req.params.id);
+    const userId = req.user.id_user;
+
+    if (!Number.isInteger(commentId) || commentId <= 0) {
+        return res.status(400).json({ error: "Invalid comment ID" });
+    }
+
+    if (!text || typeof text !== "string") {
+        return res.status(400).json({ error: "Invalid text" });
+    }
 
     try {
-        await pool.query(
-        "UPDATE comments SET text = ? WHERE id_comment = ?",
-        [text, id]
+        const [[comment]] = await pool.query(
+            "SELECT id_user FROM comments WHERE id_comment = ?",
+            [commentId]
         );
+
+        if (!comment) {
+            return res.status(404).json({ error: "Comment not found" });
+        }
+
+        if (comment.id_user !== userId) {
+            return res.status(403).json({ error: "You are not allowed to edit this comment" });
+        }
+
+        await pool.query(
+            "UPDATE comments SET text = ? WHERE id_comment = ?",
+            [text, commentId]
+        );
+
         res.json({ success: true });
     } catch (err) {
         res.status(500).json({ error: "Database error" });
@@ -138,26 +161,36 @@ exports.updateComment = async (req, res) => {
 };
 
 exports.deleteComment = async (req, res) => {
-    try{
-        const commentId = req.params.id;
-        if (!commentId || isNaN(commentId)) {
-        return res.status(400).json({ message: "Invalid comment ID" });
-        }
+        const commentId = Number(req.params.id);
+        const userId = req.user.id_user;
 
-        const [result] = await pool.query(
-        "DELETE FROM comments WHERE id_comment = ?",
-        [commentId]
+    if (!Number.isInteger(commentId) || commentId <= 0) {
+        return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    try {
+        const [[comment]] = await pool.query(
+            "SELECT id_user FROM comments WHERE id_comment = ?",
+            [commentId]
         );
 
-        if (result.affectedRows === 0) {
-        return res.status(404).json({ message: "Comment not found" });
+        if (!comment) {
+            return res.status(404).json({ message: "Comment not found" });
         }
 
-        res.json({ message: "Comment deleted successfully" });
-        
+        if (comment.id_user !== userId) {
+            return res.status(403).json({ message: "You are not allowed to delete this comment" });
+        }
 
-    } catch(errors){
-    console.error(errors);
-    res.status(500).json({message: 'Server error'});
+        await pool.query(
+            "DELETE FROM comments WHERE id_comment = ?",
+            [commentId]
+        );
+
+        res.json({ message: "Comment deleted successfully" });
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: "Server error" });
     }
 };

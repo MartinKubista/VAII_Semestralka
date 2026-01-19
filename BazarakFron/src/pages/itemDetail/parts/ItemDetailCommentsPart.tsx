@@ -12,7 +12,7 @@ type Comment = {
 
 export function ItemDetailCommentsPart() {
   const { id } = useParams();
-  const { isLoggedIn, user } = useAuth();
+  const { isLoggedIn, user, token } = useAuth();
 
   const [comments, setComments] = useState<Comment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -43,6 +43,9 @@ export function ItemDetailCommentsPart() {
         `http://localhost:5000/api/item-detail/delete-comment/${id_commentPar}`,
         {
           method: "DELETE",
+          headers: { 
+            Authorization: `Bearer ${token}`,
+          },
         }
       );
       await loadComments();
@@ -56,12 +59,15 @@ export function ItemDetailCommentsPart() {
 
     if (!validateEditForm()) return;
 
+    console.log(user?.id_user);
     try {
       await fetch(
         `http://localhost:5000/api/item-detail/update-comment/${editingId}`,
         {
           method: "PUT",
-          headers: { "Content-Type": "application/json" },
+          headers: { "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+           },
           body: JSON.stringify({ text: editingText }),
         }
       );
@@ -128,10 +134,11 @@ export function ItemDetailCommentsPart() {
       if (!validateForm()) return;
       await fetch(`http://localhost:5000/api/item-detail/add-comment`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+         },
         body: JSON.stringify({
           text: newComment,
-          id_user: user?.id_user,
           id_item: id,
         }),
       });

@@ -2,7 +2,9 @@ const pool = require('../db');
 
 
 exports.addItem = async (req, res) => {
-  const { id_user, name, category, description, price, condition, location } = req.body;
+  const { name, category, description, price, condition, location } = req.body;
+
+  const id_user = req.user.id_user;
 
   try {
     const trimmedName = typeof name === "string" ? name.trim() : "";
