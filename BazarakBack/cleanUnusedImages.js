@@ -4,7 +4,7 @@ const path = require("path");
 
 
 const uploadsCarDir = "uploads";
-
+//AI
 async function getDbImages() {
   const [rows] = await pool.query("SELECT image_path FROM images");
 
