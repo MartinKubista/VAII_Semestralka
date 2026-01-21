@@ -36,7 +36,7 @@ exports.addItem = async (req, res) => {
       return res.status(400).json({ error: "Invalid location." });
     }
 
-    const allowedCategories = ["Elektronika", "Nábytok", "Oblečenie", "Šport"];
+    const allowedCategories = ["Elektronika", "Nábytok", "Oblečenie", "Šport", "Auto"];
     if (!allowedCategories.includes(trimmedCategory)) {
       return res.status(400).json({ error: "Invalid category." });
     }

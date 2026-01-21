@@ -29,7 +29,7 @@ export function HomePage() {
     useEffect(() => {
         async function loadItems() {
             const params = new URLSearchParams(
-                Object.entries(filters).filter(([_, v]) => v !== "")
+                Object.entries(filters).filter(([, v]) => v !== "")
             );
 
             const res = await fetch(

@@ -1,8 +1,17 @@
 import { useState } from "react";
 import type { FormEvent } from "react";
 
+type SearchFilters = {
+  query: string;
+  category: string;
+  minPrice: string;
+  maxPrice: string;
+  location: string;
+  added: string;
+};
+
 type Props = {
-    onSearch: (filters: any) => void;
+    onSearch: (filters: SearchFilters) => void;
 };
 
 export function SearchPart({ onSearch }: Props) {

@@ -175,6 +175,7 @@ export function AddItemPage() {
               <option>Elektronika</option>
               <option>Nábytok</option>
               <option>Oblečenie</option>
+              <option>Auto</option>
               <option>Šport</option>
             </select>
             {errors.category && <div className="error-text">{errors.category}</div>}

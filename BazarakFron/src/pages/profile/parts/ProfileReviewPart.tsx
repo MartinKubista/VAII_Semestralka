@@ -1,5 +1,6 @@
+/* eslint-disable react-hooks/static-components */
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../../../context/useAuth";
 
 type Review = {
@@ -213,7 +214,9 @@ export function ProfileReview() {
                 className="list-group-item mb-3"
               >
                 <div className="d-flex justify-content-between">
-                  <strong>{review.user_name}</strong>
+                  <Link to={`/profile/${review.id_userw}`}  className="text-decoration-none text-reset">
+                    <strong>{review.user_name}</strong>
+                  </Link>
                   <small className="text-muted">
                     {new Date(review.created_at).toLocaleDateString("sk-SK")}
                   </small>

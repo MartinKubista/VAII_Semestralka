@@ -1,5 +1,5 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useAuth } from "../../context/useAuth";
 import "./ProfilePage.css";
 import { ProfileReview } from "./parts/ProfileReviewPart";
@@ -30,11 +30,11 @@ export function ProfilePage() {
 
   const { token, user, isLoggedIn} = useAuth();
 
-  const loadItems = async () => {
+  const loadItems = useCallback(async () => {
     const res = await fetch(`http://localhost:5000/api/profile/${id}/items`);
     const data = await res.json();
     setItems(Array.isArray(data) ? data : []);
-  };
+  }, [id]);
 
   useEffect(() => {
     async function loadProfile() {
@@ -52,7 +52,7 @@ export function ProfilePage() {
 
     }
     loadProfile();
-  }, [id]);
+  }, [id, loadItems]);
 
   const handleDelete = async (id: number) => {
     try {

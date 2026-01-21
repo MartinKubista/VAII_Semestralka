@@ -1,4 +1,5 @@
-import { useEffect, useState } from "react";
+
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/useAuth";
 
@@ -41,6 +42,11 @@ type UserData = {
   created_at: string;
 };
 
+type WithId = {
+  [key: string]: number | string;
+};
+
+
 type ActiveTable = "users" | "items" | "reviews" | "comments";
 
 export function AdminPage() {
@@ -56,7 +62,7 @@ export function AdminPage() {
 
     const [activeTable, setActiveTable] = useState<ActiveTable>("users");
 
-    const loadAdminData = async () => {
+    const loadAdminData = useCallback(async () => {
             try {
             const usersRes = await fetch("http://localhost:5000/api/admin/users", {
                 headers: { 
@@ -98,18 +104,18 @@ export function AdminPage() {
             setReviews([]);
             setComments([]);
             }
-        };
+        }, [token]);
 
     useEffect(() => {
         loadAdminData();
-    }, []);
+    }, [loadAdminData]);
 
 
 
-    const deleteEntity = async (
+    const deleteEntity = async <T extends WithId> (
         url: string,
         id: number,
-        setter: React.Dispatch<React.SetStateAction<any[]>>,
+        setter: React.Dispatch<React.SetStateAction<T[]>>,
         idKey: string
         ) => {
         if (!window.confirm("Naozaj chceš zmazať tento záznam?")) return;

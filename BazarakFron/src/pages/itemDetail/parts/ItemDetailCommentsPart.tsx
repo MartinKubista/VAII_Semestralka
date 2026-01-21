@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../../../context/useAuth";
 
 type Comment = {
@@ -160,7 +160,9 @@ export function ItemDetailCommentsPart() {
             <div key={c.id_comment} className="mb-3 pb-3">
 
               <div className="d-flex justify-content-between">
-                <div className="fw-bold">{c.user_name}</div>
+                <Link to={`/profile/${c.id_user}`}  className="text-decoration-none text-reset">
+                  <div className="fw-bold">{c.user_name}</div>
+                </Link>
 
                 <div className="text-muted" style={{ fontSize: "0.9rem" }}>
                   {new Date(c.created_at).toLocaleString("sk-SK", {
