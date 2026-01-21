@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/static-components */
 import { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useAuth } from "../../../context/useAuth";
@@ -20,26 +19,7 @@ type StarRatingProps = {
   setHover: React.Dispatch<React.SetStateAction<number>>;
 };
 
-export function ProfileReview() {
-  const { id } = useParams();
-  const { isLoggedIn, user, token } = useAuth();
-
-  const [reviews, setReviews] = useState<Review[]>([]);
-  const [newReview, setNewReview] = useState("");
-
-  const [editingId, setEditingId] = useState<number | null>(null);
-  const [editingText, setEditingText] = useState("");
-
-  const [errors, setErrors] = useState<{ newReview?: string, newRating?: string, updateReview?: string, updateRating?: string}>({});
-
-  const [rating, setRating] = useState(0);
-  const [hoverNew, setHoverNew] = useState(0);
-  const [hoverEdit, setHoverEdit] = useState(0);
-
-  const [editingRating, setEditingRating] = useState(0);
-
-  
-  const StarRating: React.FC<StarRatingProps> = ({
+const StarRating: React.FC<StarRatingProps> = ({
     rating,
     hover,
     setRating,
@@ -65,6 +45,24 @@ export function ProfileReview() {
       </div>
     );
   };
+
+export function ProfileReview() {
+  const { id } = useParams();
+  const { isLoggedIn, user, token } = useAuth();
+
+  const [reviews, setReviews] = useState<Review[]>([]);
+  const [newReview, setNewReview] = useState("");
+
+  const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingText, setEditingText] = useState("");
+
+  const [errors, setErrors] = useState<{ newReview?: string, newRating?: string, updateReview?: string, updateRating?: string}>({});
+
+  const [rating, setRating] = useState(0);
+  const [hoverNew, setHoverNew] = useState(0);
+  const [hoverEdit, setHoverEdit] = useState(0);
+
+  const [editingRating, setEditingRating] = useState(0);
 
   async function loadReviews() {
     try {
