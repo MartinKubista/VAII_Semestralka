@@ -34,6 +34,7 @@ export function ItemDetailPart() {
     <div className="card shadow p-4">
       <div className="row g-4 align-items-center">
 
+        {/* pouzite AI */}
         <div className="col-md-6 order-1 order-md-1">
           <div id="itemCarousel" className="carousel slide" data-bs-ride="carousel">
             <div className="carousel-inner">

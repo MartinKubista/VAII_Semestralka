@@ -12,6 +12,7 @@ type Review = {
   rating: number;
 };
 
+//pouzite AI
 type StarRatingProps = {
   rating: number;
   hover: number;
@@ -19,6 +20,7 @@ type StarRatingProps = {
   setHover: React.Dispatch<React.SetStateAction<number>>;
 };
 
+//pouzite AI
 const StarRating: React.FC<StarRatingProps> = ({
     rating,
     hover,
@@ -220,6 +222,7 @@ export function ProfileReview() {
                   </small>
                 </div>
                 <div className="mb-1">
+                  {/* pouzite AI */}
                   <span>Hodnotenie predajcu: </span>
                   {[1, 2, 3, 4, 5].map((star) => (
                     <span
