@@ -1,11 +1,10 @@
-# Inštalácia projektu VAII
+# Inštalácia projektu VAII_Semestralka
 
 Pred spustením projektu je potrebné mať nainštalované:
 
 - [Node.js a npm](https://nodejs.org/)
 
 
----
 ## Postup inštalácie
 ### 1. Najprv treba naklonovať repozitár
 
